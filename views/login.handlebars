@@ -1,0 +1,116 @@
+<button onclick="redirectToAnotherPage()">Back To Index</button>
+<button onclick="logout()">Logout</button>
+<h1>Code from URL</h1>
+<div class="code-container">
+    {{code}}
+</div>
+<h1>Access Token</h1>
+<div class="code-container">
+    {{jwtAccesstoken}}
+</div>
+
+{{#if isPerson}}
+<h1>ΦΥΣΙΚΟ ΠΡΟΣΩΠΟ</h1>
+{{else}}
+<h1>ΝΟΜΙΚΟ ΠΡΟΣΩΠΟ</h1>
+{{/if}}
+
+<div class="code-container">
+    ΑΦΜ: {{user.taxid}}
+</div>
+
+{{#if isPerson}}
+<div class="code-container">
+    User Name: {{user.userid}}
+</div>
+{{/if}}
+{{#if isPerson}}
+<div class="code-container">
+    ΕΠΩΝΥΜΟ: {{user.lastname}}
+</div>
+{{else}}
+<div class="code-container">
+    ΕΠΩΝΥΜΙΑ: {{user.lastname}}
+</div>
+{{/if}}
+
+{{#if isPerson}}
+<div class="code-container">
+    ΟΝΟΜΑ: {{user.firstname}}
+</div>
+{{/if}}
+
+{{#if isPerson}}
+<div class="code-container">
+    ΠΑΤΡΩΝΥΜΟ: {{user.fathername}}
+</div>
+{{/if}}
+
+{{#if isPerson}}
+<div class="code-container">
+    ΜΗΤΡΩΝΥΜΟ: {{user.mothername}}
+</div>
+{{/if}}
+
+{{#if isPerson}}
+<div class="code-container">
+    ΕΤΟΣ ΓΕΝΝΗΣΗΣ: {{user.birthyear}}
+</div>
+{{/if}}
+
+<button onclick="redirectToAnotherPage()">Back To Index</button>
+<button onclick="logout()">Logout</button>
+
+
+<script>
+    function redirectToAnotherPage () {
+        // Redirect to another URL on the same server
+        window.location.href = '/index' // Update this with your desired path
+    }
+    function logout () {
+        // Redirect to another URL on the same server
+        window.location.href = 'https://test.gsis.gr/oauth2server/logout/' + 'TX5MAQ89772' + '/?url=https://dhstest.ngrok.io/' // Update this with your desired path
+    }
+
+    function sendToken (socket_id, jwtAccesstoken) {
+        var formBody = []
+        var encodedKey = encodeURIComponent('socket_id')
+        var encodedSocket_id = encodeURIComponent(socket_id)
+        formBody.push(encodedKey + '=' + encodedSocket_id)
+
+        var encodedKey = encodeURIComponent('jwtAccesstoken')
+        var encodedJwtAccesstoken = encodeURIComponent(jwtAccesstoken)
+        formBody.push(encodedKey + '=' + encodedJwtAccesstoken)
+
+        formBody = formBody.join('&')
+        console.log('formBody', formBody)
+
+        fetch('/sendToken', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: formBody,
+        })
+            .then((res) => res.json())
+            .then((data) => {
+            })
+            .catch((error) => {
+                res.status(500).json({ error: error.message })
+            })
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        let msg = JSON.stringify({ accessToken: '{{jwtAccesstoken}}' })
+        // alert(msg)
+        console.log('msg', msg)
+        window?.ReactNativeWebView?.postMessage(msg)
+        let socket_id = localStorage.getItem('socket_id')
+        if (socket_id) {
+            sendToken(socket_id, '{{jwtAccesstoken}}')
+        }
+    });
+
+
+
+</script>
