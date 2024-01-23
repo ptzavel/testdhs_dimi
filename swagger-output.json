@@ -1,0 +1,526 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "REST API",
+    "description": ""
+  },
+  "host": "",
+  "basePath": "/api",
+  "tags": [
+    {
+      "name": "",
+      "description": ""
+    }
+  ],
+  "schemes": [],
+  "securityDefinitions": {
+    "Bearer": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header",
+      "description": "Enter JWT Token"
+    }
+  },
+  "paths": {
+    "/test": {
+      "get": {
+        "tags": [
+          "HEARTBEAT"
+        ],
+        "summary": "Heartbeat .",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/getAllFormsForCitizenAndDeme": {
+      "get": {
+        "tags": [
+          "DEME_CLIENT"
+        ],
+        "summary": "Επιστρέφει headers και πληροφορίες γιά όλες τις φόρμες ενός πολίτη σε ενα Δήμο .",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "citizenAA",
+            "in": "query",
+            "description": "Το id του πολίτη.",
+            "required": true,
+            "type": "integer",
+            "example": "1"
+          },
+          {
+            "name": "demeAA",
+            "in": "query",
+            "description": "Το id του Δήμου.",
+            "required": true,
+            "type": "integer",
+            "example": "1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/app03GeneralApplicationGet": {
+      "get": {
+        "tags": [
+          "DEME_CLIENT"
+        ],
+        "summary": "Επιστρέφει λεπτομερειες μιας επιλεγμενης φορμας Γενική Αίτηση .",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "applicationAA",
+            "in": "query",
+            "description": "Το id της φόρμας.",
+            "required": true,
+            "type": "integer",
+            "example": "1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/app03GeneralApplicationAttachmentsGet": {
+      "get": {
+        "tags": [
+          "DEME_CLIENT"
+        ],
+        "summary": "Επιστρέφει πληροφορίες για τα συνημμενα μιας φορμας Γενική Αίτηση .",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "applicationAA",
+            "in": "query",
+            "description": "Το id της φόρμας.",
+            "required": true,
+            "type": "integer",
+            "example": "1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/app03GeneralApplicationAttachmentsInsert": {
+      "post": {
+        "tags": [
+          "DEME_CLIENT"
+        ],
+        "summary": "Εισαγωγη συνημμενου για φορμα Γενική Αίτηση",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "Λεπτομέρειες Συνημμενου.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "headeraAA": {
+                  "type": "string",
+                  "example": "1"
+                },
+                "attachmentType": {
+                  "type": "string",
+                  "example": "ΑΛΛΟ ΅ΕΓΓΡΑΦΟ"
+                },
+                "attachmentFileName": {
+                  "type": "string",
+                  "example": "test.pdf"
+                },
+                "attachment": {
+                  "type": "string",
+                  "example": "<base64 data>"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/app03GeneralApplicationAttachmentsDeleteById": {
+      "post": {
+        "tags": [
+          "DEME_CLIENT"
+        ],
+        "summary": "Διαγραφή συνημμενου για φορμα Γενική Αίτηση",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "Λεπτομέρειες Συνημμενου.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "AA": {
+                  "type": "string",
+                  "example": "1"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/app03GeneralApplicationInsUpd": {
+      "post": {
+        "tags": [
+          "DEME_CLIENT"
+        ],
+        "summary": "Εισαγωγή/Ενημέρωση φορμας Γενική Αίτηση",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "Λεπτομέρειες Συνημμενου. Για νεα φορμα το applicationAA να ειναι -1, για ενημερωση να εχει την τιμη του Id της φορμας",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "applicationAA": {
+                  "type": "string",
+                  "example": "-1"
+                },
+                "demeAA": {
+                  "type": "string",
+                  "example": "1"
+                },
+                "surname": {
+                  "type": "string",
+                  "example": "Τεστοπουλος"
+                },
+                "firstName": {
+                  "type": "string",
+                  "example": ""
+                },
+                "fatherName": {
+                  "type": "string",
+                  "example": ""
+                },
+                "vatNumber": {
+                  "type": "string",
+                  "example": "099999999"
+                },
+                "dob": {
+                  "type": "string",
+                  "example": ""
+                },
+                "idCardNo": {
+                  "type": "string",
+                  "example": ""
+                },
+                "address": {
+                  "type": "string",
+                  "example": ""
+                },
+                "taxAuthority": {
+                  "type": "string",
+                  "example": ""
+                },
+                "email": {
+                  "type": "string",
+                  "example": ""
+                },
+                "telephone": {
+                  "type": "string",
+                  "example": ""
+                },
+                "zip": {
+                  "type": "string",
+                  "example": ""
+                },
+                "recipient": {
+                  "type": "string",
+                  "example": ""
+                },
+                "subject": {
+                  "type": "string",
+                  "example": ""
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/app03GeneralApplicationSubmit": {
+      "post": {
+        "tags": [
+          "DEME_CLIENT"
+        ],
+        "summary": "Υποβολή φορμας Γενική Αίτηση",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "applicationAA": {
+                  "type": "string",
+                  "example": "1"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/app03GeneralApplicationIsReadyForSubmission": {
+      "get": {
+        "tags": [
+          "DEME_CLIENT"
+        ],
+        "summary": "Επιστρέφει 1 αν η Γενικη Αιτηση ειναι ετοιμη για υποβολή, 0 αν οχι .",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "applicationAA",
+            "in": "query",
+            "description": "Το id της φόρμας.",
+            "required": true,
+            "type": "integer",
+            "example": "1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    }
+  }
+}

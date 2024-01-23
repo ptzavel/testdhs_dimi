@@ -20,6 +20,8 @@ const { engine } = require('express-handlebars')
 const FormData = require('form-data')
 const fs = require('fs')
 const { Server } = require('socket.io')
+const swaggerUi = require('swagger-ui-express')
+const swaggerFile = require('../swagger-output.json')
 
 global.irisApiKey = null
 global.recipientId = null
@@ -390,10 +392,10 @@ server.init = function (logger) {
   server.app.use(bodyParser.urlencoded({ extended: true }))
   server.app.use(bodyParser.json())
   server.app.use(express.static(root))
+  server.app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
   server.app.use('/api', appRoutes)
   server.app.use(fallback('index.html', { root: root }))
   server.app.use(favicon(path.join(__dirname, 'public', '/img/favicon.ico')))
-
   //********************************************************* */
   // SEND TOKEN TO CLIENT
   //********************************************************* */
