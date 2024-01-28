@@ -1,3 +1,13 @@
+{{!-- <button onclick="redirectToAnotherPage()">Back To Index</button>
+<button onclick="logout()">Logout</button>
+<h1>Code from URL</h1>
+<div class="code-container">
+    {{code}}
+</div>
+<h1>Access Token</h1>
+<div class="code-container">
+    {{jwtAccesstoken}}
+</div> --}}
 
 {{#if isPerson}}
 <h1>ΦΥΣΙΚΟ ΠΡΟΣΩΠΟ</h1>
@@ -48,9 +58,19 @@
 </div>
 {{/if}}
 
+<button onclick="redirectToAnotherPage()">Back To Index</button>
+<button onclick="logout()">Logout</button>
 
 
 <script>
+    function redirectToAnotherPage () {
+        // Redirect to another URL on the same server
+        window.location.href = '/index' // Update this with your desired path
+    }
+    function logout () {
+        // Redirect to another URL on the same server
+        window.location.href = 'https://test.gsis.gr/oauth2server/logout/' + 'TX5MAQ89772' + '/?url=https://dhstest.ngrok.io/' // Update this with your desired path
+    }
 
     function sendToken (socket_id, jwtAccesstoken) {
         var formBody = []

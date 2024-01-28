@@ -1,14 +1,27 @@
 const dayjs = require('dayjs')
 const fs = require('fs')
+const fs2 = require('fs').promises
+
 const PdfPrinter = require('pdfmake')
 require('dayjs/locale/el')
+const { v4: uuidv4 } = require('uuid')
+const path = require('path')
+
+const colors = {
+  HEARTRATE: 'rgb(13, 107, 200)',
+  BREATHINGRATE: 'rgb(7, 166, 76)',
+  SYSTOLIC: 'rgb(216, 35, 35)',
+  DIASTOLIC: 'rgb(11, 35, 193)',
+  OXYGEN: 'rgb(98, 22, 22)',
+  TEXT: '#322d31',
+}
 
 const fonts = {
   Roboto: {
-    normal: '../fonts/Roboto/Roboto-Regular.ttf',
-    bold: '../fonts/Roboto/Roboto-Bold.ttf',
-    italics: '../fonts/Roboto/Roboto-Italic.ttf',
-    bolditalics: '../fonts/Roboto/Roboto-BoldItalic.ttf',
+    normal: './fonts/Roboto/Roboto-Regular.ttf',
+    bold: './fonts/Roboto/Roboto-Bold.ttf',
+    italics: './fonts/Roboto/Roboto-Italic.ttf',
+    bolditalics: './fonts/Roboto/Roboto-BoldItalic.ttf',
   },
 }
 
@@ -24,6 +37,15 @@ const pdfStyles = {
     italics: true,
     margin: [0, 10, 0, 10],
   },
+  contentBold: {
+    fontSize: 10,
+    bold: true,
+    margin: [0, 5, 0, 5],
+  },
+  content: {
+    fontSize: 10,
+    margin: [0, 5, 0, 5],
+  },
   tableExample: {
     margin: [0, 10, 0, 20],
   },
@@ -32,26 +54,21 @@ const pdfStyles = {
     color: 'black',
   },
 }
+const atob = (base64) => Buffer.from(base64, 'base64').toString('binary')
 
-export const doReport = async (reportData, language) => {
-  if (language === 'gr') dayjs.locale('el')
-  else dayjs.locale('en')
-  let demographics = reportData[0]
-  let vitalsHeaders = reportData[1]
-  let vitalsDetails = reportData[2]
-  vitalsDetails = vitalsDetails.reverse()
+const writeBas64AsPdf = async (contents, outFilePath, callback) => {
+  var bin = atob(contents)
+  await fs2.writeFile(outFilePath, bin, 'binary')
+}
+
+const doReport = async (OUT_PATH, fileName, reportData, vatNumber, callback) => {
+  dayjs.locale('el')
+  let title = reportData[0]
+  let header = reportData[1]
+  let citizen = reportData[2]
+  let form = reportData[3]
+
   let docDefinition = null
-
-  let lastNMeasurements = vitalsHeaders?.length
-
-  const charts = await createCharts(vitalsDetails, language)
-
-  let testImageDataUrl = null
-  let hasPicture = false
-  if (demographics[0].picture) {
-    hasPicture = true
-    testImageDataUrl = 'data:image/png;base64,' + demographics[0].picture
-  }
 
   docDefinition = {
     styles: pdfStyles,
@@ -63,8 +80,8 @@ export const doReport = async (reportData, language) => {
         margin: [5, 5, 5, 5],
       }
     },
-    watermark: { text: 'DHS Vitals', color: '#dcdcdc', opacity: 0.15, bold: true, italics: false },
-    content: [...showDemographics(demographics, testImageDataUrl, lastNMeasurements, language)],
+    //watermark: { text: 'DHS Vitals', color: '#dcdcdc', opacity: 0.15, bold: true, italics: false },
+    content: [...showTitle(title)],
     pageBreakBefore: function (
       currentNode,
       followingNodesOnPage,
@@ -74,73 +91,198 @@ export const doReport = async (reportData, language) => {
       return currentNode.headlineLevel === 1 && followingNodesOnPage.length === 0
     },
   }
+  docDefinition.content.push(...horizontalLine())
+  docDefinition.content.push(...showHeader(header))
+  docDefinition.content.push(...horizontalLine())
+  docDefinition.content.push(...showCitizen(citizen))
+  docDefinition.content.push(...horizontalLine())
+  docDefinition.content.push(...showForm(form))
 
-  //wellnessLevel
-  docDefinition.content.push(wellnessLevel(vitalsHeaders[0], language))
-
-  let tb = createLastVitalsTable(vitalsHeaders[0], vitalsDetails, language)
-
-  docDefinition.content.push({
-    alignment: 'justify',
-    style: 'tableExample',
-    color: '#444',
-    table: tb.table,
-    layout: tableLayout,
-  })
-
-  docDefinition.content.push({
-    image: `data:image/png;base64,${charts.pressureImage}`,
-    width: 480,
-  })
-
-  docDefinition.content.push({
-    image: `data:image/png;base64,${charts.heartRateImage}`,
-    width: 480,
-  })
-
-  docDefinition.content.push({
-    image: `data:image/png;base64,${charts.breathingRateImage}`,
-    width: 480,
-  })
-
-  docDefinition.content.push({
-    image: `data:image/png;base64,${charts.oxygenSaturationImage}`,
-    width: 480,
-  })
-  // { heartRateImage: heartRateImageBase64, breathingRateImage: breathingRateImageBase64, pressureImage: pressureImageBase64 }
-
-  /////////////////////
-  //console.log(JSON.stringify(docDefinition, null, 2))
-  //savePdfToDisk(docDefinition)
   const printer = new PdfPrinter(fonts)
   const pdfDoc = printer.createPdfKitDocument(docDefinition)
-  return pdfDoc
+
+  //let writeStream = fs.createWriteStream('./pdfs/' + fileName)
+  let writeStream = fs.createWriteStream(OUT_PATH + '/' + fileName)
+
+  pdfDoc.pipe(writeStream)
+  pdfDoc.end()
+
+  let contents = ''
+  writeStream.on('close', async function () {
+    // contents = await fs2.readFile(path.resolve(__dirname, '../pdfs/' + fileName), {
+    //   encoding: 'base64',
+    // })
+    contents = await fs2.readFile(OUT_PATH + '/' + fileName, {
+      encoding: 'base64',
+    })
+
+    //await writeBas64AsPdf(contents, path.resolve(__dirname, '../pdfs/' + 'outfile.pdf'))
+    //await fs2.unlink(path.resolve(__dirname, '../pdfs/' + fileName))
+    //  await fs2.unlink(path.resolve(OUT_PATH + '/' + fileName))
+
+    callback(contents)
+  })
+
+  return contents
 }
 
-/*
-  pdfDocGenerator.getBase64((data) => {
-    alert(data);
-  });
-*/
+const horizontalLine = () => {
+  return [
+    {
+      table: {
+        headerRows: 0,
+        widths: ['100%'],
+        body: [[''], ['']],
+      },
+      layout: 'lightHorizontalLines',
+    },
+  ]
+}
+
+const showTitle = (title) => {
+  return [
+    {
+      alignment: 'center',
+      columns: [
+        {
+          text: title[0].contents,
+          style: 'header',
+          color: colors.TEXT,
+        },
+      ],
+    },
+  ]
+}
+
+const showHeader = (header) => {
+  return [
+    {
+      alignment: 'left',
+      columns: [
+        {
+          text: header[0].title + ':  ',
+          style: 'contentBold',
+          color: colors.TEXT,
+        },
+        {
+          text: header[0].contents,
+          style: 'content',
+          color: colors.TEXT,
+        },
+        {
+          text: header[1].title + ':  ',
+          style: 'contentBold',
+          color: colors.TEXT,
+        },
+        {
+          text: header[1].contents,
+          style: 'content',
+          color: colors.TEXT,
+        },
+      ],
+    },
+  ]
+}
+
+const showCitizen = (citizen) => {
+  let out = []
+
+  let ok = true
+  let i = 0
+  while (ok) {
+    out.push({
+      alignment: 'left',
+      columns: [
+        {
+          text: citizen[i]?.title + (citizen[i]?.title ? ':  ' : ''),
+          style: 'contentBold',
+          color: colors.TEXT,
+        },
+        {
+          text: citizen[i]?.contents,
+          style: 'content',
+          color: colors.TEXT,
+        },
+        {
+          text: citizen[i + 1]?.title || '' + (citizen[i + 1]?.title ? ':  ' : ''),
+          style: 'contentBold',
+          color: colors.TEXT,
+        },
+        {
+          text: citizen[i + 1]?.contents || '',
+          style: 'content',
+          color: colors.TEXT,
+        },
+      ],
+    })
+    i = i + 2
+    if (i >= citizen.length) {
+      ok = false
+    }
+  }
+
+  return out
+}
+
+const showForm = (form) => {
+  let out = []
+
+  let ok = true
+  let i = 0
+  while (ok) {
+    out.push({
+      alignment: 'left',
+      columns: [
+        {
+          text: form[i]?.title + (form[i]?.title ? ':  ' : ''),
+          style: 'contentBold',
+          color: colors.TEXT,
+        },
+        {
+          text: form[i]?.contents,
+          style: 'content',
+          color: colors.TEXT,
+        },
+        {
+          text: form[i + 1]?.title || '' + (form[i + 1]?.title ? ':  ' : ''),
+          style: 'contentBold',
+          color: colors.TEXT,
+        },
+        {
+          text: form[i + 1]?.contents || '',
+          style: 'content',
+          color: colors.TEXT,
+        },
+      ],
+    })
+    i = i + 2
+    if (i >= form.length) {
+      ok = false
+    }
+  }
+
+  return out
+}
 
 const savePdfToDisk = async (docDefinition) => {
   const printer = new PdfPrinter(fonts)
 
-  fs.exists('./chart.pdf', (exists) => {
+  fs.exists('./application.pdf', (exists) => {
     if (exists) {
       try {
-        fs.unlinkSync('./chart.pdf')
+        fs.unlinkSync('./application.pdf')
         const pdfDoc = printer.createPdfKitDocument(docDefinition)
-        pdfDoc.pipe(fs.createWriteStream('chart.pdf'))
+        pdfDoc.pipe(fs.createWriteStream('application.pdf'))
         pdfDoc.end()
       } catch (err) {
         console.error(err)
       }
     } else {
       const pdfDoc = printer.createPdfKitDocument(docDefinition)
-      pdfDoc.pipe(fs.createWriteStream('chart.pdf'))
+      pdfDoc.pipe(fs.createWriteStream('application.pdf'))
       pdfDoc.end()
     }
   })
 }
 
+module.exports = doReport

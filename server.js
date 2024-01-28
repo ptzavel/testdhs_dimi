@@ -32,7 +32,7 @@ const IRIS_UPLOAD_URL = 'https://test.iridacloud.gov.gr/iris/api/v1/document'
 const IRIS_UPLOAD_CONTENT_BOUNDARY = '----eaf02609-1dbb-46b2-a408-69a90a0d409e'
 const IRIS_INBOX_URL = 'https://test.iridacloud.gov.gr/iris/api/v1/inbox'
 const IRIS_RECIPIENTS_URL = 'https://test.iridacloud.gov.gr/iris/api/v1/recipients'
-const IRIS_TOKEN_URL= 'https://test.iridacloud.gov.gr/iris/api/v1/token'
+const IRIS_TOKEN_URL = 'https://test.iridacloud.gov.gr/iris/api/v1/token'
 
 //server object
 const root = path.join(__dirname, 'public')
@@ -45,7 +45,7 @@ server.app = express()
 passport.initialize
 
 server.init = function (logger) {
-  server.app.use(cors())
+  server.app.use(cors({ origin: true, credentials: true }))
   server.app.engine('handlebars', engine())
   server.app.set('view engine', 'handlebars')
   server.app.set('views', `${__dirname}/views`)
@@ -364,7 +364,7 @@ server.init = function (logger) {
             console.log(' code:', code, ' access_token:', accessToken, 'user:', user)
             console.log('process.env.ACCESS_TOKEN_SECRET=', process.env.ACCESS_TOKEN_SECRET)
             const jwtAccesstoken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-              expiresIn: 299,
+              expiresIn: 6000,
             })
 
             console.log('jwtAccesstoken=', jwtAccesstoken)
@@ -389,7 +389,8 @@ server.init = function (logger) {
       })
   })
 
-  server.app.use(bodyParser.urlencoded({ extended: true }))
+  server.app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }))
+
   server.app.use(bodyParser.json())
   server.app.use(express.static(root))
   server.app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
@@ -400,7 +401,6 @@ server.init = function (logger) {
   // SEND TOKEN TO CLIENT
   //********************************************************* */
   server.app.post('/sendToken', (req, res) => {
-    console.log('SOSSSSSSSSS===================req?.body=', req?.body)
     const socket_id = req?.body?.socket_id
     const jwtAccesstoken = req?.body?.jwtAccesstoken
 
@@ -408,7 +408,7 @@ server.init = function (logger) {
       let thisSocket = io.sockets.sockets.get(socket_id)
       if (thisSocket) {
         thisSocket.emit('tokenEvent', jwtAccesstoken)
-        res.status(200).json({ staus: 'OK' })
+        res.status(200).json({ status: 'OK' })
       } else {
         res.status(400).json({ error: 'socket not found' })
       }

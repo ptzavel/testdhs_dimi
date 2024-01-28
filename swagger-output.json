@@ -221,7 +221,7 @@
             "schema": {
               "type": "object",
               "properties": {
-                "headeraAA": {
+                "headerAA": {
                   "type": "string",
                   "example": "1"
                 },
@@ -425,6 +425,87 @@
         ]
       }
     },
+    "/app03GeneralApplicationIsReadyForSubmission": {
+      "get": {
+        "tags": [
+          "DEME_CLIENT"
+        ],
+        "summary": "Επιστρέφει 1 αν η Γενικη Αιτηση ειναι ετοιμη για υποβολή, 0 αν οχι .",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "applicationAA",
+            "in": "query",
+            "description": "Το id της φόρμας.",
+            "required": true,
+            "type": "integer",
+            "example": "1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/taxAuthority": {
+      "get": {
+        "tags": [
+          "DEME_CLIENT"
+        ],
+        "summary": "Επιστρέφει τις εφοριες του συστηματος .",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
     "/app03GeneralApplicationSubmit": {
       "post": {
         "tags": [
@@ -476,12 +557,12 @@
         ]
       }
     },
-    "/app03GeneralApplicationIsReadyForSubmission": {
-      "get": {
+    "/app03GeneralApplicationNew": {
+      "post": {
         "tags": [
           "DEME_CLIENT"
         ],
-        "summary": "Επιστρέφει 1 αν η Γενικη Αιτηση ειναι ετοιμη για υποβολή, 0 αν οχι .",
+        "summary": "Αρχική Εισαγωγή Φόρμας Γενική Αίτηση",
         "description": "",
         "parameters": [
           {
@@ -490,12 +571,80 @@
             "type": "string"
           },
           {
-            "name": "applicationAA",
+            "name": "obj",
+            "in": "body",
+            "description": "Αρχική Εισαγωγή Φόρμας Γενική Αίτηση με μειωμενα πεδια",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "demeAA": {
+                  "type": "string",
+                  "example": "1"
+                },
+                "surname": {
+                  "type": "string",
+                  "example": "Τεστοπουλος"
+                },
+                "firstName": {
+                  "type": "string",
+                  "example": ""
+                },
+                "fatherName": {
+                  "type": "string",
+                  "example": ""
+                },
+                "vatNumber": {
+                  "type": "string",
+                  "example": "099999999"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/getCitizenByVatNumber": {
+      "get": {
+        "tags": [
+          "DEME_CLIENT"
+        ],
+        "summary": "Επιστρέφει τα στοιχεια ενος πολιτη ψαχνοντας με το ΑΦΜ του .",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "vatNumber",
             "in": "query",
-            "description": "Το id της φόρμας.",
+            "description": "Το ΑΦΜ του πολιτη.",
             "required": true,
-            "type": "integer",
-            "example": "1"
+            "type": "string",
+            "example": "660074100"
           }
         ],
         "responses": {

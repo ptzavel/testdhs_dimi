@@ -71,7 +71,7 @@ class DB {
   // Node.js DB FOR SP pr_App03_GeneralApplication_AttachmentsInsert
   //----------------------------------------------------------------------------------
   async app03GeneralApplicationAttachmentsInsert({
-    headeraAA,
+    headerAA,
     attachmentType,
     attachmentFileName,
     attachment,
@@ -80,7 +80,7 @@ class DB {
       const data = await sql.execute(this.db_conn, {
         procedure: 'pr_App03_GeneralApplication_AttachmentsInsert',
         params: {
-          headeraAA: { type: sql.INT, val: headeraAA },
+          headerAA: { type: sql.INT, val: headerAA },
           attachmentType: { type: sql.NVARCHAR, val: attachmentType },
           attachmentFileName: { type: sql.NVARCHAR, val: attachmentFileName },
           attachment: { type: sql.NVARCHAR, val: attachment },
@@ -136,7 +136,7 @@ class DB {
         procedure: 'pr_App03_GeneralApplication_InsUpd',
         params: {
           applicationAA: { type: sql.INT, val: applicationAA },
-          demeAA: { type: sql.INT, val: DemeAA },
+          demeAA: { type: sql.INT, val: demeAA },
           surname: { type: sql.NVARCHAR, val: surname },
           firstName: { type: sql.NVARCHAR, val: firstName },
           fatherName: { type: sql.NVARCHAR, val: fatherName },
@@ -178,9 +178,6 @@ class DB {
   }
 
   //----------------------------------------------------------------------------------
-  // Node.js DB FOR SP pr_App03_GeneralApplication_ReadyForSubmission
-  //----------------------------------------------------------------------------------
-  //----------------------------------------------------------------------------------
   // Node.js DB FOR SP pr_App03_GeneralApplication_IsReadyForSubmission
   //----------------------------------------------------------------------------------
   async app03GeneralApplicationIsReadyForSubmission({ applicationAA }) {
@@ -189,6 +186,138 @@ class DB {
         procedure: 'pr_App03_GeneralApplication_IsReadyForSubmission',
         params: {
           applicationAA: { type: sql.INT, val: applicationAA },
+        },
+      })
+      return data[0][0][0]
+    } catch (error) {
+      global.logger.error(error)
+      throw error
+    }
+  }
+
+  //----------------------------------------------------------------------------------
+  // Node.js DB FOR SP pr_TaxAuthority
+  //----------------------------------------------------------------------------------
+  async taxAuthority() {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_TaxAuthority',
+      })
+      return data[0][0]
+    } catch (error) {
+      global.logger.error(error)
+      throw error
+    }
+  }
+
+  //----------------------------------------------------------------------------------
+  // Node.js DB FOR SP pr_App03_GeneralApplication_Pdf
+  //----------------------------------------------------------------------------------
+  async app03GeneralApplicationPdf({ applicationAA }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_App03_GeneralApplication_Pdf',
+        params: {
+          applicationAA: { type: sql.INT, val: applicationAA },
+        },
+      })
+      return data[0]
+    } catch (error) {
+      global.logger.error(error)
+      throw error
+    }
+  }
+
+  //----------------------------------------------------------------------------------
+  // Node.js DB FOR SP pr_App03_GeneralApplication_FormAttachmentInsUpd
+  //----------------------------------------------------------------------------------
+  async app03GeneralApplicationFormAttachmentInsUpd({
+    headerAA,
+    attachmentType,
+    attachmentFileName,
+    attachment,
+  }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_App03_GeneralApplication_FormAttachmentInsUpd',
+        params: {
+          headerAA: { type: sql.INT, val: headerAA },
+          attachmentType: { type: sql.NVARCHAR, val: attachmentType },
+          attachmentFileName: { type: sql.NVARCHAR, val: attachmentFileName },
+          attachment: { type: sql.NVARCHAR, val: attachment },
+        },
+      })
+      return data[0][0]
+    } catch (error) {
+      global.logger.error(error)
+      throw error
+    }
+  }
+
+  //----------------------------------------------------------------------------------
+  // Node.js DB FOR SP pr_App03_GeneralApplication_IrisUploads_Ins
+  //----------------------------------------------------------------------------------
+  async app03GeneralApplicationIrisUploadsIns({ applicationAA, irisId }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_App03_GeneralApplication_IrisUploads_Ins',
+        params: {
+          applicationAA: { type: sql.INT, val: applicationAA },
+          irisId: { type: sql.NVARCHAR, val: irisId },
+        },
+      })
+      return data[0][0]
+    } catch (error) {
+      global.logger.error(error)
+      throw error
+    }
+  }
+  //----------------------------------------------------------------------------------
+  // Node.js DB FOR SP pr_App03_GeneralApplication_New
+  //----------------------------------------------------------------------------------
+  async app03GeneralApplicationNew({ demeAA, surname, firstName, fatherName, vatNumber }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_App03_GeneralApplication_New',
+        params: {
+          demeAA: { type: sql.INT, val: demeAA },
+          surname: { type: sql.NVARCHAR, val: surname },
+          firstName: { type: sql.NVARCHAR, val: firstName },
+          fatherName: { type: sql.NVARCHAR, val: fatherName },
+          vatNumber: { type: sql.NVARCHAR, val: vatNumber },
+        },
+      })
+      return data[0][0]
+    } catch (error) {
+      global.logger.error(error)
+      throw error
+    }
+  }
+
+  async app03GeneralApplicationAttachmentsGetForIris({ applicationAA }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_App03_GeneralApplication_AttachmentsGetForIris',
+        params: {
+          applicationAA: { type: sql.INT, val: applicationAA },
+        },
+      })
+      return data[0][0]
+    } catch (error) {
+      global.logger.error(error)
+      throw error
+    }
+  }
+
+  //----------------------------------------------------------------------------------
+  // Node.js DB FOR SP pr_GetCitizenByVatNumber
+  //----------------------------------------------------------------------------------
+  async getCitizenByVatNumber({ vatNumber }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_GetCitizenByVatNumber',
+        params: {
+          vatNumber: { type: sql.NVARCHAR, val: vatNumber },
         },
       })
       return data[0][0]
