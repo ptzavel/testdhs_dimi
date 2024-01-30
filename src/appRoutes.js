@@ -960,4 +960,167 @@ appRoutes.get('/getCitizenByVatNumber', authenticateToken, async (req, res, next
   }
 })
 
+//----------------------------------------------------------------------------------
+// Node.js GET Routes FOR SP pr_GetFormData
+//----------------------------------------------------------------------------------
+appRoutes.get('/getFormData', async (req, res, next) => {
+  /*
+    #/api/getFormData
+    #swagger.tags = ['DEME_CLIENT']
+    #swagger.summary = 'Επιστρέφει χρησιμες πληροφοριες για τις φορμες του συτηματος.'
+    #swagger.security = [{"Bearer": []}]
+  */
+  console.log(formatDateTime(new Date()), ': /getFormData')
+  try {
+    const getFormDataData = await db.getFormData()
+
+    return res.status(200).json(getFormDataData)
+  } catch (err) {
+    global.logger.error(err)
+    return res.status(500).json({ success: false, reason: 'Internal Error' })
+  }
+})
+
+//----------------------------------------------------------------------------------
+// Node.js POST Routes FOR SP pr_Application_InsUpd
+//----------------------------------------------------------------------------------
+appRoutes.post('/applicationInsUpd', authenticateToken, async (req, res, next) => {
+  /*
+    #/api/applicationInsUpd
+    #swagger.tags = ['DEME_CLIENT']
+    #swagger.summary = 'Εισαγωγή/Ενημέρωση οποιασδηποτε φορμας'
+    #swagger.security = [{"Bearer": []}]
+    #swagger.parameters['obj'] = {
+      in: 'body',
+      description: 'Για νεα φορμα το applicationAA να ειναι -1, για ενημερωση να εχει την τιμη του Id της φορμας',
+      schema: {
+      applicationAA: '-1',
+      demeAA: '1',
+      surname: 'Τεστοπουλος',
+      firstName: 'Τεστ',
+      fatherName: 'Τεστ',
+      vatNumber: '099999999',
+      dob: '',
+      idCardNo: '',
+      address: '',
+      taxAuthority: '',
+      email: '',
+      telephone: '',
+      zip: '',
+      formKey: 'RelocationDueToTwoYearRes',
+      jsonData: '{\"yearsOfResidenceInTheMunicipality\" : 3}'
+      }
+    }
+*/
+  console.log(
+    formatDateTime(new Date()),
+    ': /applicationInsUpd',
+    'applicationAA =',
+    req.body?.applicationAA,
+    'demeAA =',
+    req.body?.demeAA,
+    'surname =',
+    req.body?.surname,
+    'firstName =',
+    req.body?.firstName,
+    'fatherName =',
+    req.body?.fatherName,
+    'vatNumber =',
+    req.body?.vatNumber,
+    'dob =',
+    req.body?.dob,
+    'idCardNo =',
+    req.body?.idCardNo,
+    'address =',
+    req.body?.address,
+    'taxAuthority =',
+    req.body?.taxAuthority,
+    'email =',
+    req.body?.email,
+    'telephone =',
+    req.body?.telephone,
+    'zip =',
+    req.body?.zip,
+    'formKey =',
+    req.body?.formKey,
+    'jsonData =',
+    req.body?.jsonData
+  )
+  try {
+    const applicationAA = req.body?.applicationAA || -1
+    const demeAA = req.body?.demeAA || null
+    const surname = req.body?.surname || null
+    const firstName = req.body?.firstName || null
+    const fatherName = req.body?.fatherName || null
+    const vatNumber = req.body?.vatNumber || null
+    const dob = req.body?.dob || null
+    const idCardNo = req.body?.idCardNo || null
+    const address = req.body?.address || null
+    const taxAuthority = req.body?.taxAuthority || null
+    const email = req.body?.email || null
+    const telephone = req.body?.telephone || null
+    const zip = req.body?.zip || null
+    const formKey = req.body?.formKey || null
+    const jsonData = req.body?.jsonData || null
+    if (!applicationAA) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, applicationAA must have a value.' })
+    }
+    if (!demeAA) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, demeAA must have a value.' })
+    }
+    if (!surname) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, surname must have a value.' })
+    }
+    if (!firstName) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, firstName must have a value.' })
+    }
+    if (!fatherName) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, fatherName must have a value.' })
+    }
+    if (!vatNumber) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, vatNumber must have a value.' })
+    }
+    if (!formKey) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, formKey must have a value.' })
+    }
+
+    const applicationInsUpdData = await db.applicationInsUpd({
+      applicationAA,
+      demeAA,
+      surname,
+      firstName,
+      fatherName,
+      vatNumber,
+      dob,
+      idCardNo,
+      address,
+      taxAuthority,
+      email,
+      telephone,
+      zip,
+      formKey,
+      jsonData,
+    })
+
+    return res.status(200).json(applicationInsUpdData)
+  } catch (err) {
+    global.logger.error(err)
+    return res.status(500).json({ success: false, reason: 'Internal Error' })
+  }
+})
+
 module.exports = appRoutes

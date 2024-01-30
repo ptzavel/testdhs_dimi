@@ -326,6 +326,68 @@ class DB {
       throw error
     }
   }
+  //----------------------------------------------------------------------------------
+  // Node.js DB FOR SP pr_GetFormData
+  //----------------------------------------------------------------------------------
+  async getFormData() {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_GetFormData',
+      })
+      return data[0][0]
+    } catch (error) {
+      global.logger.error(error)
+      throw error
+    }
+  }
+
+  //----------------------------------------------------------------------------------
+  // Node.js DB FOR SP pr_Application_InsUpd
+  //----------------------------------------------------------------------------------
+  async applicationInsUpd({
+    applicationAA,
+    demeAA,
+    surname,
+    firstName,
+    fatherName,
+    vatNumber,
+    dob,
+    idCardNo,
+    address,
+    taxAuthority,
+    email,
+    telephone,
+    zip,
+    formKey,
+    jsonData,
+  }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_Application_InsUpd',
+        params: {
+          applicationAA: { type: sql.INT, val: applicationAA },
+          demeAA: { type: sql.INT, val: demeAA },
+          surname: { type: sql.NVARCHAR, val: surname },
+          firstName: { type: sql.NVARCHAR, val: firstName },
+          fatherName: { type: sql.NVARCHAR, val: fatherName },
+          vatNumber: { type: sql.NVARCHAR, val: vatNumber },
+          dob: { type: sql.NVARCHAR, val: dob },
+          idCardNo: { type: sql.NVARCHAR, val: idCardNo },
+          address: { type: sql.NVARCHAR, val: address },
+          taxAuthority: { type: sql.NVARCHAR, val: taxAuthority },
+          email: { type: sql.NVARCHAR, val: email },
+          telephone: { type: sql.NVARCHAR, val: telephone },
+          zip: { type: sql.NVARCHAR, val: zip },
+          formKey: { type: sql.NVARCHAR, val: formKey },
+          jsonData: { type: sql.NVARCHAR, val: jsonData },
+        },
+      })
+      return data[0][0]
+    } catch (error) {
+      global.logger.error(error)
+      throw error
+    }
+  }
 }
 
 module.exports = DB

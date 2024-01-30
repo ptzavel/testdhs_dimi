@@ -670,6 +670,136 @@
           }
         ]
       }
+    },
+    "/getFormData": {
+      "get": {
+        "tags": [
+          "DEME_CLIENT"
+        ],
+        "summary": "Επιστρέφει χρησιμες πληροφοριες για τις φορμες του συτηματος.",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/applicationInsUpd": {
+      "post": {
+        "tags": [
+          "DEME_CLIENT"
+        ],
+        "summary": "Εισαγωγή/Ενημέρωση οποιασδηποτε φορμας",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "Για νεα φορμα το applicationAA να ειναι -1, για ενημερωση να εχει την τιμη του Id της φορμας",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "applicationAA": {
+                  "type": "string",
+                  "example": "-1"
+                },
+                "demeAA": {
+                  "type": "string",
+                  "example": "1"
+                },
+                "surname": {
+                  "type": "string",
+                  "example": "Τεστοπουλος"
+                },
+                "firstName": {
+                  "type": "string",
+                  "example": "Τεστ"
+                },
+                "fatherName": {
+                  "type": "string",
+                  "example": "Τεστ"
+                },
+                "vatNumber": {
+                  "type": "string",
+                  "example": "099999999"
+                },
+                "dob": {
+                  "type": "string",
+                  "example": ""
+                },
+                "idCardNo": {
+                  "type": "string",
+                  "example": ""
+                },
+                "address": {
+                  "type": "string",
+                  "example": ""
+                },
+                "taxAuthority": {
+                  "type": "string",
+                  "example": ""
+                },
+                "email": {
+                  "type": "string",
+                  "example": ""
+                },
+                "telephone": {
+                  "type": "string",
+                  "example": ""
+                },
+                "zip": {
+                  "type": "string",
+                  "example": ""
+                },
+                "formKey": {
+                  "type": "string",
+                  "example": "RelocationDueToTwoYearRes"
+                },
+                "jsonData": {
+                  "type": "string",
+                  "example": "{'yearsOfResidenceInTheMunicipality' : 3}"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
     }
   }
 }
