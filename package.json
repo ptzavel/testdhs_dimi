@@ -1,10 +1,10 @@
 {
-  "name": "dhs-deme",
+  "name": "deme-admin",
   "version": "1.0.0",
   "description": "",
-  "main": "test-dhs-deme.js",
+  "main": "deme-admin.js",
   "scripts": {
-    "start": "cls&title TEST DHS DEME &npx nodemon test-dhs-deme.js",
+    "start": "cls&title  DEME ADMIN &npx nodemon deme-admin.js",
     "doc": "node ./swagger.js"
   },
   "keywords": [],

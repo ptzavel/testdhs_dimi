@@ -16,7 +16,6 @@ var session = require('express-session')
 const convert = require('xml-js')
 const appRoutes = require('./src/appRoutes')
 const jwt = require('jsonwebtoken')
-const { engine } = require('express-handlebars')
 const FormData = require('form-data')
 const fs = require('fs')
 const { Server } = require('socket.io')
@@ -46,9 +45,6 @@ passport.initialize
 
 server.init = function (logger) {
   server.app.use(cors({ origin: true, credentials: true }))
-  server.app.engine('handlebars', engine())
-  server.app.set('view engine', 'handlebars')
-  server.app.set('views', `${__dirname}/views`)
 
   //********************************************************* */
   // UPLOAD DOCUMENT(S) TO IRIS
@@ -300,6 +296,8 @@ server.init = function (logger) {
   //********************************************************* */
   // ENRTYPOINT FOR THE OAuth2 FLOW (gsis.gr) (STEP 2,3)
   //********************************************************* */
+
+  /*
   server.app.get('/', async (req, res) => {
     const code = req.query.code
 
@@ -349,17 +347,17 @@ server.init = function (logger) {
               console.log('error user=null', e)
             }
 
-            /*
-              user= {
-                  userid: 'User660074100   ',
-                  taxid: '660074100   ',
-                  lastname: 'ΧΑΛΚΕΟΝΙΔΗΣ ΠΑΠΑΔΟΠΟΥΛΟΣ',
-                  firstname: 'ΕΥΣΤΡΑΤΙΟΣ',
-                  fathername: 'ΠΑΤΡΟΚΛΟΣ',
-                  mothername: 'ΜΥΡΣΙΝΗ',
-                  birthyear: '1970'
-              }
-			      */
+
+            //  user= {
+            //      userid: 'User660074100   ',
+            //      taxid: '660074100   ',
+            //      lastname: 'ΧΑΛΚΕΟΝΙΔΗΣ ΠΑΠΑΔΟΠΟΥΛΟΣ',
+            //      firstname: 'ΕΥΣΤΡΑΤΙΟΣ',
+            //      fathername: 'ΠΑΤΡΟΚΛΟΣ',
+            //      mothername: 'ΜΥΡΣΙΝΗ',
+            //      birthyear: '1970'
+            //  }
+
 
             console.log(' code:', code, ' access_token:', accessToken, 'user:', user)
             console.log('process.env.ACCESS_TOKEN_SECRET=', process.env.ACCESS_TOKEN_SECRET)
@@ -388,7 +386,7 @@ server.init = function (logger) {
         res.render('index', { code: code })
       })
   })
-
+*/
   server.app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }))
 
   server.app.use(bodyParser.json())
@@ -450,5 +448,7 @@ server.init = function (logger) {
     logger.info(`Running on port ${PORT}`)
   })
 }
+
+
 
 module.exports = server

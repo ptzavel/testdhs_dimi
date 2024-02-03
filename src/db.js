@@ -388,6 +388,179 @@ class DB {
       throw error
     }
   }
+
+  //----------------------------------------------------------------------------------
+  // Node.js DB FOR SP pr_GetAllFormsForAdmin
+  //----------------------------------------------------------------------------------
+  async getAllFormsForAdmin({ demeAA }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_GetAllFormsForAdmin',
+        params: {
+          demeAA: { type: sql.INT, val: demeAA },
+        },
+      })
+      return data[0][0]
+    } catch (error) {
+      global.logger.error(error)
+      throw error
+    }
+  }
+
+  //----------------------------------------------------------------------------------
+  // Node.js DB FOR SP pr_Adm_SubmitFormForCorrections
+  //----------------------------------------------------------------------------------
+  async admSubmitFormForCorrections({ applicationAA, formKey, appStatusComments }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_Adm_SubmitFormForCorrections',
+        params: {
+          applicationAA: { type: sql.INT, val: applicationAA },
+          formKey: { type: sql.NVARCHAR, val: formKey },
+          appStatusComments: { type: sql.NVARCHAR, val: appStatusComments },
+        },
+      })
+      return data[0][0]
+    } catch (error) {
+      global.logger.error(error)
+      throw error
+    }
+  }
+
+  //----------------------------------------------------------------------------------
+  // Node.js DB FOR SP pr_Adm_SubmitFormRejected
+  //----------------------------------------------------------------------------------
+  async admSubmitFormRejected({ applicationAA, formKey, appStatusComments }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_Adm_SubmitFormRejected',
+        params: {
+          applicationAA: { type: sql.INT, val: applicationAA },
+          formKey: { type: sql.NVARCHAR, val: formKey },
+          appStatusComments: { type: sql.NVARCHAR, val: appStatusComments },
+        },
+      })
+      return data[0][0]
+    } catch (error) {
+      global.logger.error(error)
+      throw error
+    }
+  }
+
+  //----------------------------------------------------------------------------------
+  // Node.js DB FOR SP pr_GetAllFormsForAdminFiltered
+  //----------------------------------------------------------------------------------
+  async getAllFormsForAdminFiltered({
+    demeAA,
+    sortingField,
+    sortingOrder,
+    formKey,
+    appStatus,
+    surname,
+    irisRegNo,
+    regNo,
+    vatNumber,
+  }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_GetAllFormsForAdminFiltered',
+        params: {
+          demeAA: { type: sql.INT, val: demeAA },
+          sortingField: { type: sql.NVARCHAR, val: sortingField },
+          sortingOrder: { type: sql.NVARCHAR, val: sortingOrder },
+          formKey: { type: sql.NVARCHAR, val: formKey },
+          appStatus: { type: sql.INT, val: appStatus },
+          surname: { type: sql.NVARCHAR, val: surname },
+          irisRegNo: { type: sql.NVARCHAR, val: irisRegNo },
+          regNo: { type: sql.NVARCHAR, val: regNo },
+          vatNumber: { type: sql.NVARCHAR, val: vatNumber },
+        },
+      })
+      return data[0][0]
+    } catch (error) {
+      global.logger.error(error)
+      throw error
+    }
+  }
+
+  //----------------------------------------------------------------------------------
+  // Node.js DB FOR SP pr_Adm_UserCreate
+  //----------------------------------------------------------------------------------
+  async admUserCreate({ demeAA, userName, lastName, firstName, pwd, isAdmin, forms }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_Adm_UserCreate',
+        params: {
+          demeAA: { type: sql.INT, val: demeAA },
+          userName: { type: sql.NVARCHAR, val: userName },
+          lastName: { type: sql.NVARCHAR, val: lastName },
+          firstName: { type: sql.NVARCHAR, val: firstName },
+          pwd: { type: sql.NVARCHAR, val: pwd },
+          isAdmin: { type: sql.BOOLEAN, val: isAdmin },
+          forms: { type: sql.NVARCHAR, val: forms },
+        },
+      })
+      return data[0][0]
+    } catch (error) {
+      global.logger.error(error)
+      throw error
+    }
+  }
+
+  //----------------------------------------------------------------------------------
+  // Node.js DB FOR SP pr_Adm_UserLogin
+  //----------------------------------------------------------------------------------
+  async admUserLogin({ userName, pwd, demeAA }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_Adm_UserLogin',
+        params: {
+          userName: { type: sql.NVARCHAR, val: userName },
+          pwd: { type: sql.NVARCHAR, val: pwd },
+          demeAA: { type: sql.INT, val: demeAA },
+        },
+      })
+      return data[0][0][0]
+    } catch (error) {
+      global.logger.error(error)
+      throw error
+    }
+  }
+  //----------------------------------------------------------------------------------
+  // Node.js DB FOR SP pr_Adm_ApplicationStatistics
+  //----------------------------------------------------------------------------------
+  async admApplicationStatistics({ demeAA }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_Adm_ApplicationStatistics',
+        params: {
+          demeAA: { type: sql.INT, val: demeAA },
+        },
+      })
+      return data[0][0]
+    } catch (error) {
+      global.logger.error(error)
+      throw error
+    }
+  }
+
+  //----------------------------------------------------------------------------------
+  // Node.js DB FOR SP pr_GetLastFormsForAdmin
+  //----------------------------------------------------------------------------------
+  async getLastFormsForAdmin({ demeAA }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_GetLastFormsForAdmin',
+        params: {
+          demeAA: { type: sql.INT, val: demeAA },
+        },
+      })
+      return data[0][0]
+    } catch (error) {
+      global.logger.error(error)
+      throw error
+    }
+  }
 }
 
 module.exports = DB
