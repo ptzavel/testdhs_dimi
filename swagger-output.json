@@ -1277,6 +1277,115 @@
           }
         ]
       }
+    },
+    "/admFormHistory": {
+      "get": {
+        "tags": [
+          "ADMIN"
+        ],
+        "summary": "Επιστρέφει το πολυ 10 τελευταιες αιτησεις.",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "applicationAA",
+            "in": "query",
+            "description": "Α/Α Αιτησης.",
+            "required": false,
+            "type": "number",
+            "example": "1"
+          },
+          {
+            "name": "formAA",
+            "in": "query",
+            "description": "Α/Α Φόρμας.",
+            "required": false,
+            "type": "number",
+            "example": "1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/admUndoAction": {
+      "post": {
+        "tags": [
+          "ADMIN"
+        ],
+        "summary": "Undo Action σε φορμα. Η φορμα επιστρεφει σε κατασταση Υποβληθείσα.",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "applicationAA": {
+                  "type": "string",
+                  "example": "1"
+                },
+                "formKey": {
+                  "type": "string",
+                  "example": "RelocationDueToTwoYearRes"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
     }
   }
 }

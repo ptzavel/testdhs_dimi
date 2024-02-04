@@ -1200,10 +1200,12 @@ appRoutes.post('/admSubmitFormForCorrections', authenticateToken, async (req, re
         .json({ success: false, reason: 'Bad Request, appStatusComments must have a value.' })
     }
 
+    let user = req.user
     const admSubmitFormForCorrectionsData = await db.admSubmitFormForCorrections({
       applicationAA,
       formKey,
       appStatusComments,
+      userAA: user.AA,
     })
 
     return res.status(200).json(admSubmitFormForCorrectionsData)
@@ -1261,10 +1263,13 @@ appRoutes.post('/admSubmitFormRejected', authenticateToken, async (req, res, nex
         .json({ success: false, reason: 'Bad Request, appStatusComments must have a value.' })
     }
 
+    let user = req.user
+    console.log('user = ', user)
     const admSubmitFormRejectedData = await db.admSubmitFormRejected({
       applicationAA,
       formKey,
       appStatusComments,
+      userAA: user.AA,
     })
 
     return res.status(200).json(admSubmitFormRejectedData)
@@ -1408,7 +1413,10 @@ appRoutes.get('/getAllFormsForAdminFiltered', authenticateToken, async (req, res
       }
     )
 
-    const getAllFormsForAdminFilteredData = await db.getAllFormsForAdminFiltered({
+    let user = req.user
+    console.log('user = ', user)
+
+    const getAllFormsForAdminFilteredData = await db.admGetAllFormsFiltered({
       demeAA,
       sortingField,
       sortingOrder,
@@ -1418,6 +1426,7 @@ appRoutes.get('/getAllFormsForAdminFiltered', authenticateToken, async (req, res
       irisRegNo,
       regNo,
       vatNumber,
+      userAA: user.AA,
     })
 
     return res.status(200).json(getAllFormsForAdminFilteredData)
@@ -1603,7 +1612,12 @@ appRoutes.get('/admApplicationStatistics', authenticateToken, async (req, res, n
         .json({ success: false, reason: 'Bad Request, demeAA must have a value.' })
     }
 
-    const admApplicationStatisticsData = await db.admApplicationStatistics({ demeAA })
+    let user = req.user
+    console.log('user = ', user)
+    const admApplicationStatisticsData = await db.admApplicationStatistics({
+      demeAA,
+      userAA: user.AA,
+    })
 
     return res.status(200).json(admApplicationStatisticsData)
   } catch (err) {
@@ -1639,9 +1653,125 @@ appRoutes.get('/getLastFormsForAdmin', authenticateToken, async (req, res, next)
         .json({ success: false, reason: 'Bad Request, demeAA must have a value.' })
     }
 
-    const getLastFormsForAdminData = await db.getLastFormsForAdmin({ demeAA })
+    let user = req.user
+    console.log('user = ', user)
+
+    const getLastFormsForAdminData = await db.aDMGetLastForms({ demeAA, userAA: user.AA })
 
     return res.status(200).json(getLastFormsForAdminData)
+  } catch (err) {
+    global.logger.error(err)
+    return res.status(500).json({ success: false, reason: 'Internal Error' })
+  }
+})
+
+//----------------------------------------------------------------------------------
+// Node.js GET Routes FOR SP pr_Adm_FormHistory
+//----------------------------------------------------------------------------------
+appRoutes.get('/admFormHistory', authenticateToken, async (req, res, next) => {
+  /*
+    #/api/getAllFormsForAdminFiltered
+    #swagger.tags = ['ADMIN']
+    #swagger.summary = 'Επιστρέφει το πολυ 10 τελευταιες αιτησεις.'
+    #swagger.security = [{"Bearer": []}]
+    #swagger.parameters['applicationAA'] = {
+        in: 'query',
+        description: 'Α/Α Αιτησης.',
+        required: false,
+        type: 'number',
+        example: '1'
+      }
+    #swagger.parameters['formAA'] = {
+        in: 'query',
+        description: 'Α/Α Φόρμας.',
+        required: false,
+        type: 'number',
+        example: '1'
+      }
+  */
+  console.log(
+    formatDateTime(new Date()),
+    ': /admFormHistory',
+    'applicationAA=',
+    req.query?.applicationAA,
+    'formAA=',
+    req.query?.formAA
+  )
+  try {
+    const applicationAA = req.query?.applicationAA || 0
+    const formAA = req.query?.formAA || 0
+
+    if (!applicationAA) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, applicationAA must have a value.' })
+    }
+    if (!formAA) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, formAA must have a value.' })
+    }
+
+    let user = req.user
+    console.log('user = ', user)
+    const admFormHistoryData = await db.admFormHistory({
+      applicationAA,
+      formAA,
+      userAA: user.AA,
+    })
+
+    return res.status(200).json(admFormHistoryData)
+  } catch (err) {
+    global.logger.error(err)
+    return res.status(500).json({ success: false, reason: 'Internal Error' })
+  }
+})
+
+//----------------------------------------------------------------------------------
+// Node.js POST Routes FOR SP pr_Adm_UndoAction
+//----------------------------------------------------------------------------------
+appRoutes.post('/admUndoAction', authenticateToken, async (req, res, next) => {
+  /*
+    #/api/admUndoAction
+    #swagger.tags = ['ADMIN']
+    #swagger.summary = 'Undo Action σε φορμα. Η φορμα επιστρεφει σε κατασταση Υποβληθείσα.'
+    #swagger.security = [{"Bearer": []}]
+    #swagger.parameters['obj'] = {
+      in: 'body',
+      schema: {
+      applicationAA: '1',
+      formKey: 'RelocationDueToTwoYearRes'
+      }
+    }
+*/
+  console.log(
+    formatDateTime(new Date()),
+    ': /admUndoAction',
+    'applicationAA =',
+    req.body?.applicationAA,
+    'formKey =',
+    req.body?.formKey
+  )
+  try {
+    const applicationAA = req.body?.applicationAA || null
+    const formKey = req.body?.formKey || null
+
+    if (!applicationAA) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, applicationAA must have a value.' })
+    }
+    if (!formKey) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, formKey must have a value.' })
+    }
+    let user = req.user
+    console.log('user = ', user)
+
+    const admUndoActionData = await db.admUndoAction({ applicationAA, formKey, userAA:user.AA })
+
+    return res.status(200).json(admUndoActionData)
   } catch (err) {
     global.logger.error(err)
     return res.status(500).json({ success: false, reason: 'Internal Error' })
