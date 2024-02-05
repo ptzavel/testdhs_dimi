@@ -1386,6 +1386,183 @@
           }
         ]
       }
+    },
+    "/admAttachmentsGet": {
+      "get": {
+        "tags": [
+          "ADMIN"
+        ],
+        "summary": "Επιστρέφει attachmens μιας απαντησης αιτησης.",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "applicationAA",
+            "in": "query",
+            "description": "Α/Α Αιτησης.",
+            "required": false,
+            "type": "number",
+            "example": "1"
+          },
+          {
+            "name": "formKey",
+            "in": "query",
+            "description": "Κλειδι Φόρμας.",
+            "required": false,
+            "type": "string",
+            "example": "ApplicationToACollectiveBo"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/admAttachmentsInsert": {
+      "post": {
+        "tags": [
+          "ADMIN"
+        ],
+        "summary": "Εισαγωγη συνημμενου απάντησης αίτησης ",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "Λεπτομέρειες Συνημμενου.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "headerAA": {
+                  "type": "string",
+                  "example": "1"
+                },
+                "attachmentType": {
+                  "type": "string",
+                  "example": "ΑΛΛΟ ΅ΕΓΓΡΑΦΟ"
+                },
+                "attachmentFileName": {
+                  "type": "string",
+                  "example": "test.pdf"
+                },
+                "attachmentSize": {
+                  "type": "string",
+                  "example": "10MB"
+                },
+                "attachment": {
+                  "type": "string",
+                  "example": "<base64 data>"
+                },
+                "formKey": {
+                  "type": "string",
+                  "example": "RelocationDueToTwoYearRes"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/admAttachmentsDeleteById": {
+      "post": {
+        "tags": [
+          "ADMIN"
+        ],
+        "summary": "Διαγραφη συνημμενου απάντησης αίτησης ",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ΑΑ": {
+                  "type": "string",
+                  "example": "1"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
     }
   }
 }

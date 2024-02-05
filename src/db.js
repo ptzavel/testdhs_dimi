@@ -660,6 +660,75 @@ class DB {
       throw error
     }
   }
+
+  //----------------------------------------------------------------------------------
+  // Node.js DB FOR SP pr_Adm_AttachmentsGet
+  //----------------------------------------------------------------------------------
+  async admAttachmentsGet({ applicationAA, formKey }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_Adm_AttachmentsGet',
+        params: {
+          applicationAA: { type: sql.INT, val: applicationAA },
+          formKey: { type: sql.NVARCHAR, val: formKey },
+        },
+      })
+      return data[0][0]
+    } catch (error) {
+      global.logger.error(error)
+      throw error
+    }
+  }
+
+  //----------------------------------------------------------------------------------
+  // Node.js DB FOR SP pr_Adm_AttachmentsInsert
+  //----------------------------------------------------------------------------------//----------------------------------------------------------------------------------
+  // Node.js DB FOR SP pr_Adm_AttachmentsInsert
+  //----------------------------------------------------------------------------------
+  async admAttachmentsInsert({
+    headerAA,
+    attachmentType,
+    attachmentFileName,
+    attachmentSize,
+    attachment,
+    formKey,
+  }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_Adm_AttachmentsInsert',
+        params: {
+          headerAA: { type: sql.INT, val: headerAA },
+          attachmentType: { type: sql.NVARCHAR, val: attachmentType },
+          attachmentFileName: { type: sql.NVARCHAR, val: attachmentFileName },
+          attachmentSize: { type: sql.INT, val: attachmentSize },
+          attachment: { type: sql.NVARCHAR, val: attachment },
+          formKey: { type: sql.NVARCHAR, val: formKey },
+        },
+      })
+      return data[0][0]
+    } catch (error) {
+      global.logger.error(error)
+      throw error
+    }
+  }
+
+  //----------------------------------------------------------------------------------
+  // Node.js DB FOR SP pr_Adm_Attachments_DeleteById
+  //----------------------------------------------------------------------------------
+  async admAttachmentsDeleteById({ AA }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_Adm_Attachments_DeleteById',
+        params: {
+          AA: { type: sql.INT, val: AA },
+        },
+      })
+      return data[0][0]
+    } catch (error) {
+      global.logger.error(error)
+      throw error
+    }
+  }
 }
 
 module.exports = DB

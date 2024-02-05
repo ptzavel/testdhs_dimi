@@ -1769,9 +1769,188 @@ appRoutes.post('/admUndoAction', authenticateToken, async (req, res, next) => {
     let user = req.user
     console.log('user = ', user)
 
-    const admUndoActionData = await db.admUndoAction({ applicationAA, formKey, userAA:user.AA })
+    const admUndoActionData = await db.admUndoAction({ applicationAA, formKey, userAA: user.AA })
 
     return res.status(200).json(admUndoActionData)
+  } catch (err) {
+    global.logger.error(err)
+    return res.status(500).json({ success: false, reason: 'Internal Error' })
+  }
+})
+
+//----------------------------------------------------------------------------------
+// Node.js GET Routes FOR SP pr_Adm_AttachmentsGet
+//----------------------------------------------------------------------------------
+appRoutes.get('/admAttachmentsGet', authenticateToken, async (req, res, next) => {
+  /*
+    #/api/getAllFormsForAdminFiltered
+    #swagger.tags = ['ADMIN']
+    #swagger.summary = 'Επιστρέφει attachmens μιας απαντησης αιτησης.'
+    #swagger.security = [{"Bearer": []}]
+    #swagger.parameters['applicationAA'] = {
+        in: 'query',
+        description: 'Α/Α Αιτησης.',
+        required: false,
+        type: 'number',
+        example: '1'
+      }
+    #swagger.parameters['formKey'] = {
+        in: 'query',
+        description: 'Κλειδι Φόρμας.',
+        required: false,
+        type: 'string',
+        example: 'ApplicationToACollectiveBo'
+      }
+  */
+  console.log(
+    formatDateTime(new Date()),
+    ': /admAttachmentsGet',
+    'applicationAA=',
+    req.query?.applicationAA,
+    'formKey=',
+    req.query?.formKey
+  )
+  try {
+    const applicationAA = req.query?.applicationAA || 0
+    const formKey = req.query?.formKey || null
+    if (!applicationAA) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, applicationAA must have a value.' })
+    }
+    if (!formKey) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, formKey must have a value.' })
+    }
+
+    const admAttachmentsGetData = await db.admAttachmentsGet({ applicationAA, formKey })
+
+    return res.status(200).json(admAttachmentsGetData)
+  } catch (err) {
+    global.logger.error(err)
+    return res.status(500).json({ success: false, reason: 'Internal Error' })
+  }
+})
+
+//----------------------------------------------------------------------------------
+// Node.js POST Routes FOR SP pr_Adm_AttachmentsInsert
+//----------------------------------------------------------------------------------
+appRoutes.post('/admAttachmentsInsert', authenticateToken, async (req, res, next) => {
+  /*
+    #/api/admAttachmentsInsert
+    #swagger.tags = ['ADMIN']
+    #swagger.summary = 'Εισαγωγη συνημμενου απάντησης αίτησης '
+    #swagger.security = [{"Bearer": []}]
+    #swagger.parameters['obj'] = {
+      in: 'body',
+      description: 'Λεπτομέρειες Συνημμενου.',
+      schema: {
+        headerAA: '1',
+        attachmentType: 'ΑΛΛΟ ΅ΕΓΓΡΑΦΟ',
+        attachmentFileName: 'test.pdf',
+        attachmentSize: '10MB',
+        attachment: '<base64 data>',
+        formKey: 'RelocationDueToTwoYearRes'
+      }
+    }
+*/
+  console.log(
+    formatDateTime(new Date()),
+    ': /admAttachmentsInsert',
+    'headerAA =',
+    req.body?.headerAA,
+    'attachmentType =',
+    req.body?.attachmentType,
+    'attachmentFileName =',
+    req.body?.attachmentFileName,
+    'attachmentSize =',
+    req.body?.attachmentSize,
+    'attachment =',
+    req.body?.attachment,
+    'formKey =',
+    req.body?.formKey
+  )
+  try {
+    const headerAA = req.body?.headerAA || null
+    const attachmentType = req.body?.attachmentType || null
+    const attachmentFileName = req.body?.attachmentFileName || null
+    const attachmentSize = req.body?.attachmentSize || null
+    const attachment = req.body?.attachment || null
+    const formKey = req.body?.formKey || null
+    if (!headerAA) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, headerAA must have a value.' })
+    }
+    if (!attachmentType) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, attachmentType must have a value.' })
+    }
+    if (!attachmentFileName) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, attachmentFileName must have a value.' })
+    }
+    if (!attachmentSize) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, attachmentSize must have a value.' })
+    }
+    if (!attachment) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, attachment must have a value.' })
+    }
+    if (!formKey) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, formKey must have a value.' })
+    }
+
+    const admAttachmentsInsertData = await db.admAttachmentsInsert({
+      headerAA,
+      attachmentType,
+      attachmentFileName,
+      attachmentSize,
+      attachment,
+      formKey,
+    })
+
+    return res.status(200).json(admAttachmentsInsertData)
+  } catch (err) {
+    global.logger.error(err)
+    return res.status(500).json({ success: false, reason: 'Internal Error' })
+  }
+})
+
+//----------------------------------------------------------------------------------
+// Node.js POST Routes FOR SP pr_Adm_Attachments_DeleteById
+//----------------------------------------------------------------------------------
+appRoutes.post('/admAttachmentsDeleteById', authenticateToken, async (req, res, next) => {
+  /*
+    #/api/admAttachmentsDeleteById
+    #swagger.tags = ['ADMIN']
+    #swagger.summary = 'Διαγραφη συνημμενου απάντησης αίτησης '
+    #swagger.security = [{"Bearer": []}]
+    #swagger.parameters['obj'] = {
+      in: 'body',
+      schema: {
+        ΑΑ: '1'
+      }
+    }
+*/
+  console.log(formatDateTime(new Date()), ': /admAttachmentsDeleteById', 'AA =', req.body?.AA)
+  try {
+    const AA = req.body?.AA || null
+    if (!AA) {
+      return res.status(400).json({ success: false, reason: 'Bad Request, AA must have a value.' })
+    }
+
+    const admAttachmentsDeleteByIdData = await db.admAttachmentsDeleteById({ AA })
+
+    return res.status(200).json(admAttachmentsDeleteByIdData)
   } catch (err) {
     global.logger.error(err)
     return res.status(500).json({ success: false, reason: 'Internal Error' })
