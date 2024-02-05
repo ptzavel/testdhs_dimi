@@ -729,6 +729,44 @@ class DB {
       throw error
     }
   }
+
+  //----------------------------------------------------------------------------------
+  // Node.js DB FOR SP pr_Adm_AttachmentsGetForDisplay
+  //----------------------------------------------------------------------------------
+  async admAttachmentsGetForDisplay({ AA }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_Adm_AttachmentsGetForDisplay',
+        params: {
+          AA: { type: sql.INT, val: AA },
+        },
+      })
+      return data[0][0][0]
+    } catch (error) {
+      global.logger.error(error)
+      throw error
+    }
+  }
+
+  //----------------------------------------------------------------------------------
+  // Node.js DB FOR SP pr_Adm_SubmitFormAnswer
+  //----------------------------------------------------------------------------------
+  async admSubmitFormAnswer({ applicationAA, formKey, userAA }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_Adm_SubmitFormAnswer',
+        params: {
+          applicationAA: { type: sql.INT, val: applicationAA },
+          formKey: { type: sql.NVARCHAR, val: formKey },
+          userAA: { type: sql.INT, val: userAA },
+        },
+      })
+      return data[0][0]
+    } catch (error) {
+      global.logger.error(error)
+      throw error
+    }
+  }
 }
 
 module.exports = DB

@@ -1957,4 +1957,93 @@ appRoutes.post('/admAttachmentsDeleteById', authenticateToken, async (req, res, 
   }
 })
 
+//----------------------------------------------------------------------------------
+// Node.js GET Routes FOR SP pr_Adm_AttachmentsGetForDisplay
+//----------------------------------------------------------------------------------
+appRoutes.get('/admAttachmentsGetForDisplay', authenticateToken, async (req, res, next) => {
+  /*
+    #/api/getAllFormsForAdminFiltered
+    #swagger.tags = ['ADMIN']
+    #swagger.summary = 'Επιστρέφει attachmens μιας απαντησης αιτησης.'
+    #swagger.security = [{"Bearer": []}]
+    #swagger.parameters['AA'] = {
+        in: 'query',
+        description: 'Attachment Α/Α.',
+        required: false,
+        type: 'number',
+        example: '1'
+      }
+  */
+  console.log(formatDateTime(new Date()), ': /admAttachmentsGetForDisplay', 'AA=', req.query?.AA)
+  try {
+    const AA = req.query?.AA || 0
+    if (!AA) {
+      return res.status(400).json({ success: false, reason: 'Bad Request, AA must have a value.' })
+    }
+
+    const admAttachmentsGetForDisplayData = await db.admAttachmentsGetForDisplay({ AA })
+
+    return res.status(200).json(admAttachmentsGetForDisplayData)
+  } catch (err) {
+    global.logger.error(err)
+    return res.status(500).json({ success: false, reason: 'Internal Error' })
+  }
+})
+
+//----------------------------------------------------------------------------------
+// Node.js POST Routes FOR SP pr_Adm_SubmitFormAnswer
+//----------------------------------------------------------------------------------
+appRoutes.post('/admSubmitFormAnswer', authenticateToken, async (req, res, next) => {
+  /*
+    #/api/admSubmitFormAnswer
+    #swagger.tags = ['ADMIN']
+    #swagger.summary = 'αποδοχή και απαντηση αιτησης πολίτη'
+    #swagger.security = [{"Bearer": []}]
+    #swagger.parameters['obj'] = {
+      in: 'body',
+      schema: {
+        applicationAA: '1',
+        formKey: 'RelocationDueToTwoYearRes',
+      }
+    }
+*/
+
+
+  console.log(
+    formatDateTime(new Date()),
+    ': /admSubmitFormAnswer',
+    'applicationAA =',
+    req.body?.applicationAA,
+    'formKey =',
+    req.body?.formKey
+  )
+  try {
+    const applicationAA = req.body?.applicationAA || null
+    const formKey = req.body?.formKey || null
+
+    if (!applicationAA) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, applicationAA must have a value.' })
+    }
+    if (!formKey) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, formKey must have a value.' })
+    }
+    let user = req.user
+    console.log('user = ', user)
+
+    const admSubmitFormAnswerData = await db.admSubmitFormAnswer({
+      applicationAA,
+      formKey,
+      userAA: user.AA,
+    })
+
+    return res.status(200).json(admSubmitFormAnswerData)
+  } catch (err) {
+    global.logger.error(err)
+    return res.status(500).json({ success: false, reason: 'Internal Error' })
+  }
+})
 module.exports = appRoutes
