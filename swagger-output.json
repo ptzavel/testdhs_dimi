@@ -750,59 +750,12 @@
         ]
       }
     },
-<<<<<<< HEAD
     "/app03GeneralApplicationSubmit": {
       "post": {
         "tags": [
           "DEME_CLIENT"
         ],
         "summary": "Υποβολή φορμας Γενική Αίτηση",
-=======
-    "/getAllFormsForAdmin": {
-      "get": {
-        "tags": [
-          "ADMIN"
-        ],
-        "summary": "Επιστρέφει τις υποβληθείσες φορμες του συτηματος.",
-        "description": "",
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        },
-        "security": [
-          {
-            "Bearer": []
-          }
-        ]
-      }
-    },
-    "/admSubmitFormForCorrections": {
-      "post": {
-        "tags": [
-          "ADMIN"
-        ],
-        "summary": "Επιστροφη φορμας στον πολιτη για διορθωση",
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
         "description": "",
         "parameters": [
           {
@@ -819,17 +772,6 @@
                 "applicationAA": {
                   "type": "string",
                   "example": "1"
-<<<<<<< HEAD
-=======
-                },
-                "formKey": {
-                  "type": "string",
-                  "example": "RelocationDueToTwoYearRes"
-                },
-                "appStatusComments": {
-                  "type": "string",
-                  "example": "Παρακαλουμε να υποβαλλετε την φορμα ξανα με τις σωστες πληροφοριες"
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
                 }
               }
             }
@@ -859,21 +801,12 @@
         ]
       }
     },
-<<<<<<< HEAD
     "/applicationGet": {
       "get": {
         "tags": [
           "DEME_CLIENT_ALL"
         ],
         "summary": "Επιστρέφει λεπτομερειες μιας επιλεγμενης φορμας .",
-=======
-    "/admSubmitFormRejected": {
-      "post": {
-        "tags": [
-          "ADMIN"
-        ],
-        "summary": "Απόρριψη αίτησης πολίτη",
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
         "description": "",
         "parameters": [
           {
@@ -882,7 +815,6 @@
             "type": "string"
           },
           {
-<<<<<<< HEAD
             "name": "applicationAA",
             "in": "query",
             "description": "Το id της φόρμας.",
@@ -897,27 +829,6 @@
             "required": true,
             "type": "string",
             "example": "ApplicationToACollectiveBo"
-=======
-            "name": "obj",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "applicationAA": {
-                  "type": "string",
-                  "example": "1"
-                },
-                "formKey": {
-                  "type": "string",
-                  "example": "RelocationDueToTwoYearRes"
-                },
-                "appStatusComments": {
-                  "type": "string",
-                  "example": "το αιτημα σας δεν εγκριθηκε"
-                }
-              }
-            }
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
           }
         ],
         "responses": {
@@ -944,21 +855,12 @@
         ]
       }
     },
-<<<<<<< HEAD
     "/attachmentsGet": {
       "get": {
         "tags": [
           "DEME_CLIENT_ALL"
         ],
         "summary": "Επιστρέφει πληροφορίες για τα συνημμενα μιας φορμας .",
-=======
-    "/getAllFormsForAdminFiltered": {
-      "get": {
-        "tags": [
-          "ADMIN"
-        ],
-        "summary": "Επιστρέφει αιτησεις βασει κριτηριων αναζητησης .",
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
         "description": "",
         "parameters": [
           {
@@ -967,7 +869,6 @@
             "type": "string"
           },
           {
-<<<<<<< HEAD
             "name": "applicationAA",
             "in": "query",
             "description": "Το id της φόρμας.",
@@ -982,78 +883,6 @@
             "required": true,
             "type": "string",
             "example": "ApplicationToACollectiveBo"
-=======
-            "name": "demeAA",
-            "in": "query",
-            "description": "Α/Α Δημου.",
-            "required": false,
-            "type": "number",
-            "example": "1"
-          },
-          {
-            "name": "sortingField",
-            "in": "query",
-            "description": "Πεδιο ταξινομησης.",
-            "required": false,
-            "type": "string",
-            "example": "surname"
-          },
-          {
-            "name": "sortingOrder",
-            "in": "query",
-            "description": "Σειρά ταξινομησης.",
-            "required": false,
-            "type": "string",
-            "example": "ASC"
-          },
-          {
-            "name": "formKey",
-            "in": "query",
-            "description": "Κλειδί φορμας.",
-            "required": false,
-            "type": "string",
-            "example": "ApplicationToACollectiveBo"
-          },
-          {
-            "name": "appStatus",
-            "in": "query",
-            "description": "Status αίτησης.",
-            "required": false,
-            "type": "number",
-            "example": "1"
-          },
-          {
-            "name": "surname",
-            "in": "query",
-            "description": "Επώνυμο η μερος επωνυμου πολίτη.",
-            "required": false,
-            "type": "string",
-            "example": "ΧΑΛΚ"
-          },
-          {
-            "name": "irisRegNo",
-            "in": "query",
-            "description": "Αρ. Πρωτοκόλλου ΙΡΙΔΑ.",
-            "required": false,
-            "type": "string",
-            "example": "1212"
-          },
-          {
-            "name": "regNo",
-            "in": "query",
-            "description": "Μοναδικός Αρ. Αίτησης",
-            "required": false,
-            "type": "number",
-            "example": "291"
-          },
-          {
-            "name": "vatNumber",
-            "in": "query",
-            "description": "ΑΦΜ",
-            "required": false,
-            "type": "string",
-            "example": "034998765"
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
           }
         ],
         "responses": {
@@ -1080,21 +909,12 @@
         ]
       }
     },
-<<<<<<< HEAD
     "/attachmentsInsert": {
       "post": {
         "tags": [
           "DEME_CLIENT_ALL"
         ],
         "summary": "Εισαγωγη συνημμενου για φορμα Γενική Αίτηση",
-=======
-    "/admUserCreate": {
-      "post": {
-        "tags": [
-          "ADMIN"
-        ],
-        "summary": "Δημιουργια νεου χρηστη",
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
         "description": "",
         "parameters": [
           {
@@ -1105,7 +925,6 @@
           {
             "name": "obj",
             "in": "body",
-<<<<<<< HEAD
             "description": "Λεπτομέρειες Συνημμενου.",
             "schema": {
               "type": "object",
@@ -1129,38 +948,6 @@
                 "formKey": {
                   "type": "string",
                   "example": "ApplicationToACollectiveBo"
-=======
-            "schema": {
-              "type": "object",
-              "properties": {
-                "demeAA": {
-                  "type": "number",
-                  "example": 1
-                },
-                "userName": {
-                  "type": "string",
-                  "example": "user1"
-                },
-                "lastName": {
-                  "type": "string",
-                  "example": "Τεστ1"
-                },
-                "firstName": {
-                  "type": "string",
-                  "example": "Τεστ2"
-                },
-                "pwd": {
-                  "type": "string",
-                  "example": "123"
-                },
-                "isAdmin": {
-                  "type": "number",
-                  "example": 0
-                },
-                "forms": {
-                  "type": "string",
-                  "example": "F1,F2,F3"
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
                 }
               }
             }
@@ -1190,65 +977,12 @@
         ]
       }
     },
-<<<<<<< HEAD
     "/formIsReadyForSubmission": {
       "get": {
         "tags": [
           "DEME_CLIENT_ALL"
         ],
         "summary": "Επιστρέφει 1 αν η form ειναι ετοιμη για υποβολή, 0 αν οχι .",
-=======
-    "/Login": {
-      "post": {
-        "tags": [
-          "ADMIN"
-        ],
-        "summary": "Login to the application.",
-        "description": "",
-        "parameters": [
-          {
-            "name": "obj",
-            "in": "body",
-            "description": "Login details...",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "userName": {
-                  "type": "string",
-                  "example": "test"
-                },
-                "pwd": {
-                  "type": "string",
-                  "example": "123"
-                }
-              },
-              "required": [
-                "userName",
-                "pwd"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/admApplicationStatistics": {
-      "get": {
-        "tags": [
-          "ADMIN"
-        ],
-        "summary": "Επιστρέφει στατιστικες αιτησεων .",
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
         "description": "",
         "parameters": [
           {
@@ -1257,7 +991,6 @@
             "type": "string"
           },
           {
-<<<<<<< HEAD
             "name": "applicationAA",
             "in": "query",
             "description": "Το id της φόρμας.",
@@ -1272,13 +1005,6 @@
             "required": true,
             "type": "string",
             "example": "ApplicationToACollectiveBo"
-=======
-            "name": "demeAA",
-            "in": "query",
-            "description": "Α/Α Δημου.",
-            "required": false,
-            "type": "number",
-            "example": "1"
           }
         ],
         "responses": {
@@ -1305,68 +1031,12 @@
         ]
       }
     },
-    "/getLastFormsForAdmin": {
-      "get": {
-        "tags": [
-          "ADMIN"
-        ],
-        "summary": "Επιστρέφει το πολυ 10 τελευταιες αιτησεις.",
-        "description": "",
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          },
-          {
-            "name": "demeAA",
-            "in": "query",
-            "description": "Α/Α Δημου.",
-            "required": false,
-            "type": "number",
-            "example": "1"
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        },
-        "security": [
-          {
-            "Bearer": []
-          }
-        ]
-      }
-    },
-<<<<<<< HEAD
     "/formNew": {
       "post": {
         "tags": [
           "DEME_CLIENT_ALL"
         ],
         "summary": "Αρχική Εισαγωγή Φόρμας με μειωμενα πεδια",
-=======
-    "/admFormHistory": {
-      "get": {
-        "tags": [
-          "ADMIN"
-        ],
-        "summary": "Επιστρέφει το πολυ 10 τελευταιες αιτησεις.",
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
         "description": "",
         "parameters": [
           {
@@ -1375,7 +1045,6 @@
             "type": "string"
           },
           {
-<<<<<<< HEAD
             "name": "obj",
             "in": "body",
             "description": "Αρχική Εισαγωγή Φόρμας με μειωμενα πεδια",
@@ -1408,22 +1077,6 @@
                 }
               }
             }
-=======
-            "name": "applicationAA",
-            "in": "query",
-            "description": "Α/Α Αιτησης.",
-            "required": false,
-            "type": "number",
-            "example": "1"
-          },
-          {
-            "name": "formAA",
-            "in": "query",
-            "description": "Α/Α Φόρμας.",
-            "required": false,
-            "type": "number",
-            "example": "1"
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
           }
         ],
         "responses": {
@@ -1450,21 +1103,12 @@
         ]
       }
     },
-<<<<<<< HEAD
     "/formSubmit": {
       "post": {
         "tags": [
           "DEME_CLIENT_ALL"
         ],
         "summary": "Υποβολή φορμας ",
-=======
-    "/admUndoAction": {
-      "post": {
-        "tags": [
-          "ADMIN"
-        ],
-        "summary": "Undo Action σε φορμα. Η φορμα επιστρεφει σε κατασταση Υποβληθείσα.",
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
         "description": "",
         "parameters": [
           {
@@ -1514,75 +1158,12 @@
         ]
       }
     },
-<<<<<<< HEAD
     "/applicationDelete": {
       "post": {
         "tags": [
           "DEME_CLIENT_ALL"
         ],
         "summary": "Διαγραφή προσωρινά αποθηκευμένης αίτησης",
-=======
-    "/admAttachmentsGet": {
-      "get": {
-        "tags": [
-          "ADMIN"
-        ],
-        "summary": "Επιστρέφει attachmens μιας απαντησης αιτησης.",
-        "description": "",
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          },
-          {
-            "name": "applicationAA",
-            "in": "query",
-            "description": "Α/Α Αιτησης.",
-            "required": false,
-            "type": "number",
-            "example": "1"
-          },
-          {
-            "name": "formKey",
-            "in": "query",
-            "description": "Κλειδι Φόρμας.",
-            "required": false,
-            "type": "string",
-            "example": "ApplicationToACollectiveBo"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        },
-        "security": [
-          {
-            "Bearer": []
-          }
-        ]
-      }
-    },
-    "/admAttachmentsInsert": {
-      "post": {
-        "tags": [
-          "ADMIN"
-        ],
-        "summary": "Εισαγωγη συνημμενου απάντησης αίτησης ",
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
         "description": "",
         "parameters": [
           {
@@ -1593,7 +1174,6 @@
           {
             "name": "obj",
             "in": "body",
-<<<<<<< HEAD
             "schema": {
               "type": "object",
               "properties": {
@@ -1601,32 +1181,6 @@
                   "type": "string",
                   "example": "1"
                 },
-=======
-            "description": "Λεπτομέρειες Συνημμενου.",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "headerAA": {
-                  "type": "string",
-                  "example": "1"
-                },
-                "attachmentType": {
-                  "type": "string",
-                  "example": "ΑΛΛΟ ΅ΕΓΓΡΑΦΟ"
-                },
-                "attachmentFileName": {
-                  "type": "string",
-                  "example": "test.pdf"
-                },
-                "attachmentSize": {
-                  "type": "string",
-                  "example": "10MB"
-                },
-                "attachment": {
-                  "type": "string",
-                  "example": "<base64 data>"
-                },
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
                 "formKey": {
                   "type": "string",
                   "example": "RelocationDueToTwoYearRes"
@@ -1659,21 +1213,12 @@
         ]
       }
     },
-<<<<<<< HEAD
     "/citizenMyApplications": {
       "get": {
         "tags": [
           "DEME_CLIENT_ALL"
         ],
         "summary": "Οι φορμες μου (πρωτη σελιδα)",
-=======
-    "/admAttachmentsDeleteById": {
-      "post": {
-        "tags": [
-          "ADMIN"
-        ],
-        "summary": "Διαγραφη συνημμενου απάντησης αίτησης ",
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
         "description": "",
         "parameters": [
           {
@@ -1682,26 +1227,12 @@
             "type": "string"
           },
           {
-<<<<<<< HEAD
             "name": "citizenAA",
             "in": "query",
             "description": "Το id του πολιτη.",
             "required": true,
             "type": "integer",
             "example": "1"
-=======
-            "name": "obj",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "ΑΑ": {
-                  "type": "string",
-                  "example": "1"
-                }
-              }
-            }
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
           }
         ],
         "responses": {
@@ -1728,21 +1259,12 @@
         ]
       }
     },
-<<<<<<< HEAD
     "/attachmentsGetForDisplay": {
       "get": {
         "tags": [
           "DEME_CLIENT_ALL"
         ],
         "summary": "Φερνει 1 attachment στιε φορμς πολιτη σε μορφη base 64 encoded PDF",
-=======
-    "/admAttachmentsGetForDisplay": {
-      "get": {
-        "tags": [
-          "ADMIN"
-        ],
-        "summary": "Επιστρέφει attachmens μιας απαντησης αιτησης.",
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
         "description": "",
         "parameters": [
           {
@@ -1751,19 +1273,11 @@
             "type": "string"
           },
           {
-<<<<<<< HEAD
             "name": "citizenAA",
             "in": "query",
             "description": "Το id του πολιτη.",
             "required": true,
             "type": "integer",
-=======
-            "name": "AA",
-            "in": "query",
-            "description": "Attachment Α/Α.",
-            "required": false,
-            "type": "number",
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
             "example": "1"
           }
         ],
@@ -1791,21 +1305,12 @@
         ]
       }
     },
-<<<<<<< HEAD
     "/attachmentsDeleteById": {
       "post": {
         "tags": [
           "DEME_CLIENT_ALL"
         ],
         "summary": "διαγραφη ενςο ενος συνημμενου απο τον πολιτη.",
-=======
-    "/admSubmitFormAnswer": {
-      "post": {
-        "tags": [
-          "ADMIN"
-        ],
-        "summary": "αποδοχή και απαντηση αιτησης πολίτη",
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
         "description": "",
         "parameters": [
           {
@@ -1814,30 +1319,12 @@
             "type": "string"
           },
           {
-<<<<<<< HEAD
             "name": "AA",
             "in": "query",
             "description": "Το id του συνημμενου.",
             "required": true,
             "type": "integer",
             "example": "1"
-=======
-            "name": "obj",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "applicationAA": {
-                  "type": "string",
-                  "example": "1"
-                },
-                "formKey": {
-                  "type": "string",
-                  "example": "RelocationDueToTwoYearRes"
-                }
-              }
-            }
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
           }
         ],
         "responses": {

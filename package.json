@@ -1,10 +1,10 @@
 {
-  "name": "deme-admin",
+  "name": "dhs-deme",
   "version": "1.0.0",
   "description": "",
-  "main": "deme-admin.js",
+  "main": "test-dhs-deme.js",
   "scripts": {
-    "start": "cls&title  DEME ADMIN &npx nodemon deme-admin.js",
+    "start": "cls&title TEST DHS DEME &npx nodemon test-dhs-deme.js",
     "doc": "node ./swagger.js"
   },
   "keywords": [],
@@ -28,6 +28,7 @@
     "express-validator": "^6.15.0",
     "form-data": "^4.0.0",
     "fs": "0.0.1-security",
+    "get-stream": "^8.0.1",
     "handlebars": "^4.7.8",
     "http-errors": "^1.8.1",
     "https-proxy-agent": "^5.0.0",
@@ -42,7 +43,7 @@
     "nodemon": "^2.0.7",
     "passport": "^0.7.0",
     "passport-oauth2": "^1.7.0",
-    "pdfmake": "^0.2.9",
+    "pdfmake": "^0.2.7",
     "phantomjs-prebuilt": "^2.1.16",
     "qs": "^6.11.2",
     "read-excel-file": "^5.7.1",
@@ -54,10 +55,10 @@
     "swagger-autogen": "^2.23.7",
     "swagger-ui-express": "^5.0.0",
     "uuid": "^9.0.1",
+    "uuidv4": "^6.2.13",
     "winston": "^3.3.3",
     "xml-js": "^1.6.11",
-    "xml2js": "^0.6.2",
-    "zod": "^3.22.4"
+    "xml2js": "^0.6.2"
   },
   "devDependencies": {
     "eslint": "^7.20.0"

@@ -77,7 +77,6 @@ function authenticateToken(req, res, next) {
 
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
     if (err) {
-      console.log(err)
       if (err?.name === 'TokenExpiredError') {
         return res.status(403).json({ success: false, reason: 'Token Expired' })
       } else {
@@ -1026,7 +1025,6 @@ console.log('object = ', {
 })
 
 //----------------------------------------------------------------------------------
-<<<<<<< HEAD
 // Node.js POST Routes FOR SP pr_App03_GeneralApplication_Submit
 //----------------------------------------------------------------------------------
 appRoutes.post('/app03GeneralApplicationSubmit', authenticateToken, async (req, res, next) => {
@@ -1034,86 +1032,27 @@ appRoutes.post('/app03GeneralApplicationSubmit', authenticateToken, async (req, 
     #/api/app03GeneralApplicationSubmit
     #swagger.tags = ['DEME_CLIENT']
     #swagger.summary = 'Υποβολή φορμας Γενική Αίτηση'
-=======
-// Node.js GET Routes FOR SP pr_GetAllFormsForAdmin
-//----------------------------------------------------------------------------------
-appRoutes.get('/getAllFormsForAdmin', authenticateToken, async (req, res, next) => {
-  /*
-    #/api/getFormData
-    #swagger.tags = ['ADMIN']
-    #swagger.summary = 'Επιστρέφει τις υποβληθείσες φορμες του συτηματος.'
-    #swagger.security = [{"Bearer": []}]
-  */
-  console.log(formatDateTime(new Date()), ': /getAllFormsForAdmin', 'demeAA=', req.query?.demeAA)
-  try {
-    const demeAA = req.query?.demeAA || 0
-    if (!demeAA) {
-      return res
-        .status(400)
-        .json({ success: false, reason: 'Bad Request, demeAA must have a value.' })
-    }
-
-    const getAllFormsForAdminData = await db.getAllFormsForAdmin({ demeAA })
-
-    return res.status(200).json(getAllFormsForAdminData)
-  } catch (err) {
-    global.logger.error(err)
-    return res.status(500).json({ success: false, reason: 'Internal Error' })
-  }
-})
-
-//----------------------------------------------------------------------------------
-// Node.js POST Routes FOR SP pr_Adm_SubmitFormForCorrections
-//----------------------------------------------------------------------------------
-appRoutes.post('/admSubmitFormForCorrections', authenticateToken, async (req, res, next) => {
-  /*
-    #/api/admSubmitFormForCorrections
-    #swagger.tags = ['ADMIN']
-    #swagger.summary = 'Επιστροφη φορμας στον πολιτη για διορθωση'
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
     #swagger.security = [{"Bearer": []}]
     #swagger.parameters['obj'] = {
       in: 'body',
       schema: {
-<<<<<<< HEAD
       applicationAA: '1'
-=======
-      applicationAA: '1',
-      formKey: 'RelocationDueToTwoYearRes',
-      appStatusComments: 'Παρακαλουμε να υποβαλλετε την φορμα ξανα με τις σωστες πληροφοριες'
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
       }
     }
 */
   console.log(
     formatDateTime(new Date()),
-<<<<<<< HEAD
     ': /app03GeneralApplicationSubmit',
     'applicationAA =',
     req.body?.applicationAA
   )
   try {
     const applicationAA = req.body?.applicationAA || null
-=======
-    ': /admSubmitFormForCorrections',
-    'applicationAA =',
-    req.body?.applicationAA,
-    'formKey =',
-    req.body?.formKey,
-    'appStatusComments =',
-    req.body?.appStatusComments
-  )
-  try {
-    const applicationAA = req.body?.applicationAA || null
-    const formKey = req.body?.formKey || null
-    const appStatusComments = req.body?.appStatusComments || null
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
     if (!applicationAA) {
       return res
         .status(400)
         .json({ success: false, reason: 'Bad Request, applicationAA must have a value.' })
     }
-<<<<<<< HEAD
 
     const isFormReadyForSubmission = await db.app03GeneralApplicationIsReadyForSubmission({
       applicationAA,
@@ -1197,28 +1136,6 @@ appRoutes.post('/admSubmitFormForCorrections', authenticateToken, async (req, re
     })
 
     return res.status(200).json(app03GeneralApplicationSubmitData)
-=======
-    if (!formKey) {
-      return res
-        .status(400)
-        .json({ success: false, reason: 'Bad Request, formKey must have a value.' })
-    }
-    if (!appStatusComments) {
-      return res
-        .status(400)
-        .json({ success: false, reason: 'Bad Request, appStatusComments must have a value.' })
-    }
-
-    let user = req.user
-    const admSubmitFormForCorrectionsData = await db.admSubmitFormForCorrections({
-      applicationAA,
-      formKey,
-      appStatusComments,
-      userAA: user.AA,
-    })
-
-    return res.status(200).json(admSubmitFormForCorrectionsData)
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
   } catch (err) {
     global.logger.error(err)
     return res.status(500).json({ success: false, reason: 'Internal Error' })
@@ -1226,7 +1143,6 @@ appRoutes.post('/admSubmitFormForCorrections', authenticateToken, async (req, re
 })
 
 //----------------------------------------------------------------------------------
-<<<<<<< HEAD
 //GENERIC SP ROUTES
 //----------------------------------------------------------------------------------
 
@@ -1267,39 +1183,6 @@ appRoutes.get('/applicationGet', authenticateToken, async (req, res, next) => {
   try {
     const applicationAA = req.query?.applicationAA || 0
     const formKey = req.query?.formKey || null
-=======
-// Node.js POST Routes FOR SP pr_Adm_SubmitFormRejected
-//----------------------------------------------------------------------------------
-appRoutes.post('/admSubmitFormRejected', authenticateToken, async (req, res, next) => {
-  /*
-    #/api/admSubmitFormRejected
-    #swagger.tags = ['ADMIN']
-    #swagger.summary = 'Απόρριψη αίτησης πολίτη'
-    #swagger.security = [{"Bearer": []}]
-    #swagger.parameters['obj'] = {
-      in: 'body',
-      schema: {
-      applicationAA: '1',
-      formKey: 'RelocationDueToTwoYearRes',
-      appStatusComments: 'το αιτημα σας δεν εγκριθηκε'
-      }
-    }
-*/
-  console.log(
-    formatDateTime(new Date()),
-    ': /admSubmitFormRejected',
-    'applicationAA =',
-    req.body?.applicationAA,
-    'formKey =',
-    req.body?.formKey,
-    'appStatusComments =',
-    req.body?.appStatusComments
-  )
-  try {
-    const applicationAA = req.body?.applicationAA || null
-    const formKey = req.body?.formKey || null
-    const appStatusComments = req.body?.appStatusComments || null
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
     if (!applicationAA) {
       return res
         .status(400)
@@ -1310,29 +1193,10 @@ appRoutes.post('/admSubmitFormRejected', authenticateToken, async (req, res, nex
         .status(400)
         .json({ success: false, reason: 'Bad Request, formKey must have a value.' })
     }
-<<<<<<< HEAD
 
     const applicationGetData = await db.applicationGet({ applicationAA, formKey })
 
     return res.status(200).json(applicationGetData)
-=======
-    if (!appStatusComments) {
-      return res
-        .status(400)
-        .json({ success: false, reason: 'Bad Request, appStatusComments must have a value.' })
-    }
-
-    let user = req.user
-    console.log('user = ', user)
-    const admSubmitFormRejectedData = await db.admSubmitFormRejected({
-      applicationAA,
-      formKey,
-      appStatusComments,
-      userAA: user.AA,
-    })
-
-    return res.status(200).json(admSubmitFormRejectedData)
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
   } catch (err) {
     global.logger.error(err)
     return res.status(500).json({ success: false, reason: 'Internal Error' })
@@ -1340,7 +1204,6 @@ appRoutes.post('/admSubmitFormRejected', authenticateToken, async (req, res, nex
 })
 
 //----------------------------------------------------------------------------------
-<<<<<<< HEAD
 // Node.js GET Routes FOR SP pr_AttachmentsGet
 //----------------------------------------------------------------------------------
 appRoutes.get('/attachmentsGet', authenticateToken, async (req, res, next) => {
@@ -1361,48 +1224,10 @@ appRoutes.get('/attachmentsGet', authenticateToken, async (req, res, next) => {
         in: 'query',
         description: 'Το formKey της φόρμας.',
         required: true,
-=======
-// Node.js GET Routes FOR SP pr_GetAllFormsForAdminFiltered
-//----------------------------------------------------------------------------------
-appRoutes.get('/getAllFormsForAdminFiltered', authenticateToken, async (req, res, next) => {
-  /*
-    #/api/getAllFormsForAdminFiltered
-    #swagger.tags = ['ADMIN']
-    #swagger.summary = 'Επιστρέφει αιτησεις βασει κριτηριων αναζητησης .'
-    #swagger.security = [{"Bearer": []}]
-    #swagger.parameters['demeAA'] = {
-        in: 'query',
-        description: 'Α/Α Δημου.',
-        required: false,
-        type: 'number',
-        example: '1'
-      }
-    #swagger.parameters['sortingField'] = {
-        in: 'query',
-        description: 'Πεδιο ταξινομησης.',
-        required: false,
-        type: 'string',
-        example: 'surname'
-      }
-    }
-    #swagger.parameters['sortingOrder'] = {
-        in: 'query',
-        description: 'Σειρά ταξινομησης.',
-        required: false,
-        type: 'string',
-        example: 'ASC'
-      }
-    }
-    #swagger.parameters['formKey'] = {
-        in: 'query',
-        description: 'Κλειδί φορμας.',
-        required: false,
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
         type: 'string',
         example: 'ApplicationToACollectiveBo'
       }
     }
-<<<<<<< HEAD
   */
   console.log(
     formatDateTime(new Date()),
@@ -1429,119 +1254,6 @@ appRoutes.get('/getAllFormsForAdminFiltered', authenticateToken, async (req, res
     const attachmentsGetData = await db.attachmentsGet({ applicationAA, formKey })
 
     return res.status(200).json(attachmentsGetData)
-=======
-    #swagger.parameters['appStatus'] = {
-        in: 'query',
-        description: 'Status αίτησης.',
-        required: false,
-        type: 'number',
-        example: '1'
-      }
-    }
-    #swagger.parameters['surname'] = {
-        in: 'query',
-        description: 'Επώνυμο η μερος επωνυμου πολίτη.',
-        required: false,
-        type: 'string',
-        example: 'ΧΑΛΚ'
-      }
-    }
-    #swagger.parameters['irisRegNo'] = {
-        in: 'query',
-        description: 'Αρ. Πρωτοκόλλου ΙΡΙΔΑ.',
-        required: false,
-        type: 'string',
-        example: '1212'
-      }
-    }
-    #swagger.parameters['regNo'] = {
-        in: 'query',
-        description: 'Μοναδικός Αρ. Αίτησης',
-        required: false,
-        type: 'number',
-        example: '291'
-      }
-    }
-    #swagger.parameters['vatNumber'] = {
-        in: 'query',
-        description: 'ΑΦΜ',
-        required: false,
-        type: 'string',
-        example: '034998765'
-      }
-    }
-  */
-
-  console.log(
-    formatDateTime(new Date()),
-    ': /getAllFormsForAdminFiltered',
-    'demeAA=',
-    req.query?.demeAA,
-    'sortingField=',
-    req.query?.sortingField,
-    'sortingOrder=',
-    req.query?.sortingOrder,
-    'formKey=',
-    req.query?.formKey,
-    'appStatus=',
-    req.query?.appStatus,
-    'surname=',
-    req.query?.surname,
-    'irisRegNo=',
-    req.query?.irisRegNo,
-    'regNo=',
-    req.query?.regNo,
-    'vatNumber=',
-    req.query?.vatNumber
-  )
-  try {
-    const demeAA = req.query?.demeAA ?? 1
-    const sortingField = req.query?.sortingField ?? ''
-    const sortingOrder = req.query?.sortingOrder ?? ''
-    const formKey = req.query?.formKey ?? ''
-    const appStatus = req.query?.appStatus ?? -1
-    const surname = req.query?.surname ?? ''
-    const irisRegNo = req.query?.irisRegNo ?? ''
-    const regNo = req.query?.regNo ?? ''
-    const vatNumber = req.query?.vatNumber ?? ''
-    if (!demeAA) {
-      return res
-        .status(400)
-        .json({ success: false, reason: 'Bad Request, demeAA must have a value.' })
-    }
-    console.log(
-      '{demeAA,sortingField,sortingOrder,formKey,appStatus,surname,irisRegNo,regNo,vatNumber,}',
-      {
-        demeAA,
-        sortingField,
-        sortingOrder,
-        formKey,
-        appStatus,
-        surname,
-        irisRegNo,
-        regNo,
-        vatNumber,
-      }
-    )
-
-    let user = req.user
-    console.log('user = ', user)
-
-    const getAllFormsForAdminFilteredData = await db.admGetAllFormsFiltered({
-      demeAA,
-      sortingField,
-      sortingOrder,
-      formKey,
-      appStatus,
-      surname,
-      irisRegNo,
-      regNo,
-      vatNumber,
-      userAA: user.AA,
-    })
-
-    return res.status(200).json(getAllFormsForAdminFilteredData)
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
   } catch (err) {
     global.logger.error(err)
     return res.status(500).json({ success: false, reason: 'Internal Error' })
@@ -1549,7 +1261,6 @@ appRoutes.get('/getAllFormsForAdminFiltered', authenticateToken, async (req, res
 })
 
 //----------------------------------------------------------------------------------
-<<<<<<< HEAD
 // Node.js POST Routes FOR SP pr_AttachmentsInsert
 //----------------------------------------------------------------------------------
 appRoutes.post('/attachmentsInsert', authenticateToken, async (req, res, next) => {
@@ -1567,32 +1278,11 @@ appRoutes.post('/attachmentsInsert', authenticateToken, async (req, res, next) =
         attachmentFileName: 'test.pdf',
         attachment: '<base64 data>',
         formKey: 'ApplicationToACollectiveBo'
-=======
-// Node.js POST Routes FOR SP pr_Adm_UserCreate
-//----------------------------------------------------------------------------------
-appRoutes.post('/admUserCreate', authenticateToken, async (req, res, next) => {
-  /*
-    #/api/admUserCreate
-    #swagger.tags = ['ADMIN']
-    #swagger.summary = 'Δημιουργια νεου χρηστη'
-    #swagger.security = [{"Bearer": []}]
-    #swagger.parameters['obj'] = {
-      in: 'body',
-      schema: {
-      demeAA: 1,
-      userName: 'user1',
-      lastName: 'Τεστ1',
-      firstName: 'Τεστ2',
-      pwd:'123',
-      isAdmin:0,
-      forms:'F1,F2,F3'
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
       }
     }
 */
   console.log(
     formatDateTime(new Date()),
-<<<<<<< HEAD
     ': /attachmentsInsert',
     'headerAA =',
     req.body?.headerAA,
@@ -1647,130 +1337,12 @@ appRoutes.post('/admUserCreate', authenticateToken, async (req, res, next) => {
 
     return res.status(200).json(attachmentsInsertData)
   } catch (err) {
-=======
-    ': /admUserCreate',
-    'demeAA =',
-    req.body?.demeAA,
-    'userName =',
-    req.body?.userName,
-    'lastName =',
-    req.body?.lastName,
-    'firstName =',
-    req.body?.firstName,
-    'pwd =',
-    req.body?.pwd,
-    'isAdmin =',
-    req.body?.isAdmin,
-    'forms =',
-    req.body?.forms
-  )
-  try {
-    const demeAA = req.body?.demeAA || 1
-    const userName = req.body?.userName || null
-    const lastName = req.body?.lastName || null
-    const firstName = req.body?.firstName || null
-    const pwd = req.body?.pwd || null
-    const isAdmin = req.body?.isAdmin || 0
-    const forms = req.body?.forms || null
-    if (!demeAA) {
-      return res
-        .status(400)
-        .json({ success: false, reason: 'Bad Request, demeAA must have a value.' })
-    }
-    if (!userName) {
-      return res
-        .status(400)
-        .json({ success: false, reason: 'Bad Request, userName must have a value.' })
-    }
-    if (!lastName) {
-      return res
-        .status(400)
-        .json({ success: false, reason: 'Bad Request, lastName must have a value.' })
-    }
-    if (!firstName) {
-      return res
-        .status(400)
-        .json({ success: false, reason: 'Bad Request, firstName must have a value.' })
-    }
-    if (!pwd) {
-      return res.status(400).json({ success: false, reason: 'Bad Request, pwd must have a value.' })
-    }
-    if (!isAdmin) {
-      return res
-        .status(400)
-        .json({ success: false, reason: 'Bad Request, isAdmin must have a value.' })
-    }
-    if (!forms) {
-      return res
-        .status(400)
-        .json({ success: false, reason: 'Bad Request, forms must have a value.' })
-    }
-
-    const admUserCreateData = await db.admUserCreate({
-      demeAA,
-      userName,
-      lastName,
-      firstName,
-      pwd,
-      isAdmin,
-      forms,
-    })
-
-    return res.status(200).json(admUserCreateData)
-  } catch (err) {
     global.logger.error(err)
     return res.status(500).json({ success: false, reason: 'Internal Error' })
   }
 })
 
 //----------------------------------------------------------------------------------
-// Node.js POST Routes FOR SP pr_Persons_Login
-//----------------------------------------------------------------------------------
-appRoutes.post('/Login', async (req, res, next) => {
-  /*
-    #Login
-    #swagger.tags = ['ADMIN']
-    #swagger.summary = 'Login to the application.'
-    #swagger.parameters['obj'] = {
-        in: 'body',
-        description: 'Login details...',
-        schema: {
-                    $userName: 'test',
-                    $pwd: '123'
-                }
-
-    }
-  */
-  console.log(formatDateTime(new Date()), ':  /Login', req.body?.userName)
-  try {
-    const userName = req?.body?.userName || null
-    const pwd = req?.body?.pwd || null
-    if (!userName) {
-      console.log('400. User name must be non empty')
-      return res.status(400).json({ success: false, reason: 'User name must be non empty.' })
-    }
-    if (!pwd) {
-      console.log('400. Password must be non empty')
-      return res.status(400).json({ success: false, reason: 'password must be non empty.' })
-    }
-
-    const userData = await db.admUserLogin({ userName, pwd, demeAA: 1 })
-    console.log('userData=', userData)
-    const accessToken = jwt.sign(userData, process.env.ACCESS_TOKEN_SECRET, {
-      expiresIn: 5000,
-    })
-
-    return res.status(200).json({ ...userData, accessToken: accessToken })
-  } catch (err) {
-    console.log('500.Internal Error')
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
-    global.logger.error(err)
-    return res.status(500).json({ success: false, reason: 'Internal Error' })
-  }
-})
-
-//----------------------------------------------------------------------------------
-<<<<<<< HEAD
 // Node.js GET Routes FOR SP pr_Form_IsReadyForSubmission
 //----------------------------------------------------------------------------------
 appRoutes.get('/formIsReadyForSubmission', authenticateToken, async (req, res, next) => {
@@ -1807,134 +1379,11 @@ appRoutes.get('/formIsReadyForSubmission', authenticateToken, async (req, res, n
   try {
     const applicationAA = req.query?.applicationAA || 0
     const formKey = req.query?.formKey || null
-=======
-// Node.js GET Routes FOR SP pr_Adm_ApplicationStatistics
-//----------------------------------------------------------------------------------
-appRoutes.get('/admApplicationStatistics', authenticateToken, async (req, res, next) => {
-  /*
-    #/api/getAllFormsForAdminFiltered
-    #swagger.tags = ['ADMIN']
-    #swagger.summary = 'Επιστρέφει στατιστικες αιτησεων .'
-    #swagger.security = [{"Bearer": []}]
-    #swagger.parameters['demeAA'] = {
-        in: 'query',
-        description: 'Α/Α Δημου.',
-        required: false,
-        type: 'number',
-        example: '1'
-      }
-
-  */
-  console.log(
-    formatDateTime(new Date()),
-    ': /admApplicationStatistics',
-    'demeAA=',
-    req.query?.demeAA
-  )
-  try {
-    const demeAA = req.query?.demeAA || 0
-    if (!demeAA) {
-      return res
-        .status(400)
-        .json({ success: false, reason: 'Bad Request, demeAA must have a value.' })
-    }
-
-    let user = req.user
-    console.log('user = ', user)
-    const admApplicationStatisticsData = await db.admApplicationStatistics({
-      demeAA,
-      userAA: user.AA,
-    })
-
-    return res.status(200).json(admApplicationStatisticsData)
-  } catch (err) {
-    global.logger.error(err)
-    return res.status(500).json({ success: false, reason: 'Internal Error' })
-  }
-})
-
-//----------------------------------------------------------------------------------
-// Node.js GET Routes FOR SP pr_GetLastFormsForAdmin
-//----------------------------------------------------------------------------------
-appRoutes.get('/getLastFormsForAdmin', authenticateToken, async (req, res, next) => {
-  /*
-    #/api/getAllFormsForAdminFiltered
-    #swagger.tags = ['ADMIN']
-    #swagger.summary = 'Επιστρέφει το πολυ 10 τελευταιες αιτησεις.'
-    #swagger.security = [{"Bearer": []}]
-    #swagger.parameters['demeAA'] = {
-        in: 'query',
-        description: 'Α/Α Δημου.',
-        required: false,
-        type: 'number',
-        example: '1'
-      }
-
-  */
-  console.log(formatDateTime(new Date()), ': /getLastFormsForAdmin', 'demeAA=', req.query?.demeAA)
-  try {
-    const demeAA = req.query?.demeAA || 0
-    if (!demeAA) {
-      return res
-        .status(400)
-        .json({ success: false, reason: 'Bad Request, demeAA must have a value.' })
-    }
-
-    let user = req.user
-    console.log('user = ', user)
-
-    const getLastFormsForAdminData = await db.aDMGetLastForms({ demeAA, userAA: user.AA })
-
-    return res.status(200).json(getLastFormsForAdminData)
-  } catch (err) {
-    global.logger.error(err)
-    return res.status(500).json({ success: false, reason: 'Internal Error' })
-  }
-})
-
-//----------------------------------------------------------------------------------
-// Node.js GET Routes FOR SP pr_Adm_FormHistory
-//----------------------------------------------------------------------------------
-appRoutes.get('/admFormHistory', authenticateToken, async (req, res, next) => {
-  /*
-    #/api/getAllFormsForAdminFiltered
-    #swagger.tags = ['ADMIN']
-    #swagger.summary = 'Επιστρέφει το πολυ 10 τελευταιες αιτησεις.'
-    #swagger.security = [{"Bearer": []}]
-    #swagger.parameters['applicationAA'] = {
-        in: 'query',
-        description: 'Α/Α Αιτησης.',
-        required: false,
-        type: 'number',
-        example: '1'
-      }
-    #swagger.parameters['formAA'] = {
-        in: 'query',
-        description: 'Α/Α Φόρμας.',
-        required: false,
-        type: 'number',
-        example: '1'
-      }
-  */
-  console.log(
-    formatDateTime(new Date()),
-    ': /admFormHistory',
-    'applicationAA=',
-    req.query?.applicationAA,
-    'formAA=',
-    req.query?.formAA
-  )
-  try {
-    const applicationAA = req.query?.applicationAA || 0
-    const formAA = req.query?.formAA || 0
-
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
     if (!applicationAA) {
       return res
         .status(400)
         .json({ success: false, reason: 'Bad Request, applicationAA must have a value.' })
     }
-<<<<<<< HEAD
     if (!formKey) {
       return res
         .status(400)
@@ -1947,23 +1396,6 @@ appRoutes.get('/admFormHistory', authenticateToken, async (req, res, next) => {
     })
 
     return res.status(200).json(formIsReadyForSubmissionData)
-=======
-    if (!formAA) {
-      return res
-        .status(400)
-        .json({ success: false, reason: 'Bad Request, formAA must have a value.' })
-    }
-
-    let user = req.user
-    console.log('user = ', user)
-    const admFormHistoryData = await db.admFormHistory({
-      applicationAA,
-      formAA,
-      userAA: user.AA,
-    })
-
-    return res.status(200).json(admFormHistoryData)
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
   } catch (err) {
     global.logger.error(err)
     return res.status(500).json({ success: false, reason: 'Internal Error' })
@@ -1971,7 +1403,6 @@ appRoutes.get('/admFormHistory', authenticateToken, async (req, res, next) => {
 })
 
 //----------------------------------------------------------------------------------
-<<<<<<< HEAD
 // Node.js POST Routes FOR SP pr_Form_New
 //----------------------------------------------------------------------------------
 appRoutes.post('/formNew', authenticateToken, async (req, res, next) => {
@@ -1989,27 +1420,12 @@ appRoutes.post('/formNew', authenticateToken, async (req, res, next) => {
       firstName: '',
       fatherName: '',
       vatNumber: '099999999',
-=======
-// Node.js POST Routes FOR SP pr_Adm_UndoAction
-//----------------------------------------------------------------------------------
-appRoutes.post('/admUndoAction', authenticateToken, async (req, res, next) => {
-  /*
-    #/api/admUndoAction
-    #swagger.tags = ['ADMIN']
-    #swagger.summary = 'Undo Action σε φορμα. Η φορμα επιστρεφει σε κατασταση Υποβληθείσα.'
-    #swagger.security = [{"Bearer": []}]
-    #swagger.parameters['obj'] = {
-      in: 'body',
-      schema: {
-      applicationAA: '1',
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
       formKey: 'RelocationDueToTwoYearRes'
       }
     }
 */
   console.log(
     formatDateTime(new Date()),
-<<<<<<< HEAD
     ': /formNew',
     'demeAA =',
     req.body?.demeAA,
@@ -2021,16 +1437,10 @@ appRoutes.post('/admUndoAction', authenticateToken, async (req, res, next) => {
     req.body?.fatherName,
     'vatNumber =',
     req.body?.vatNumber,
-=======
-    ': /admUndoAction',
-    'applicationAA =',
-    req.body?.applicationAA,
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
     'formKey =',
     req.body?.formKey
   )
   try {
-<<<<<<< HEAD
     const demeAA = req.body?.demeAA || null
     const surname = req.body?.surname || null
     const firstName = req.body?.firstName || null
@@ -2061,22 +1471,12 @@ appRoutes.post('/admUndoAction', authenticateToken, async (req, res, next) => {
       return res
         .status(400)
         .json({ success: false, reason: 'Bad Request, vatNumber must have a value.' })
-=======
-    const applicationAA = req.body?.applicationAA || null
-    const formKey = req.body?.formKey || null
-
-    if (!applicationAA) {
-      return res
-        .status(400)
-        .json({ success: false, reason: 'Bad Request, applicationAA must have a value.' })
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
     }
     if (!formKey) {
       return res
         .status(400)
         .json({ success: false, reason: 'Bad Request, formKey must have a value.' })
     }
-<<<<<<< HEAD
 
     const formNewData = await db.formNew({
       demeAA,
@@ -2088,14 +1488,6 @@ appRoutes.post('/admUndoAction', authenticateToken, async (req, res, next) => {
     })
 
     return res.status(200).json(formNewData)
-=======
-    let user = req.user
-    console.log('user = ', user)
-
-    const admUndoActionData = await db.admUndoAction({ applicationAA, formKey, userAA: user.AA })
-
-    return res.status(200).json(admUndoActionData)
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
   } catch (err) {
     global.logger.error(err)
     return res.status(500).json({ success: false, reason: 'Internal Error' })
@@ -2103,7 +1495,6 @@ appRoutes.post('/admUndoAction', authenticateToken, async (req, res, next) => {
 })
 
 //----------------------------------------------------------------------------------
-<<<<<<< HEAD
 // Node.js POST Routes FOR SP pr_Form_Submit
 //----------------------------------------------------------------------------------
 appRoutes.post('/formSubmit', authenticateToken, async (req, res, next) => {
@@ -2131,42 +1522,6 @@ appRoutes.post('/formSubmit', authenticateToken, async (req, res, next) => {
   try {
     const applicationAA = req.body?.applicationAA || null
     const formKey = req.body?.formKey || null
-=======
-// Node.js GET Routes FOR SP pr_Adm_AttachmentsGet
-//----------------------------------------------------------------------------------
-appRoutes.get('/admAttachmentsGet', authenticateToken, async (req, res, next) => {
-  /*
-    #/api/getAllFormsForAdminFiltered
-    #swagger.tags = ['ADMIN']
-    #swagger.summary = 'Επιστρέφει attachmens μιας απαντησης αιτησης.'
-    #swagger.security = [{"Bearer": []}]
-    #swagger.parameters['applicationAA'] = {
-        in: 'query',
-        description: 'Α/Α Αιτησης.',
-        required: false,
-        type: 'number',
-        example: '1'
-      }
-    #swagger.parameters['formKey'] = {
-        in: 'query',
-        description: 'Κλειδι Φόρμας.',
-        required: false,
-        type: 'string',
-        example: 'ApplicationToACollectiveBo'
-      }
-  */
-  console.log(
-    formatDateTime(new Date()),
-    ': /admAttachmentsGet',
-    'applicationAA=',
-    req.query?.applicationAA,
-    'formKey=',
-    req.query?.formKey
-  )
-  try {
-    const applicationAA = req.query?.applicationAA || 0
-    const formKey = req.query?.formKey || null
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
     if (!applicationAA) {
       return res
         .status(400)
@@ -2178,15 +1533,9 @@ appRoutes.get('/admAttachmentsGet', authenticateToken, async (req, res, next) =>
         .json({ success: false, reason: 'Bad Request, formKey must have a value.' })
     }
 
-<<<<<<< HEAD
     const formSubmitData = await db.formSubmit({ applicationAA, formKey })
 
     return res.status(200).json(formSubmitData)
-=======
-    const admAttachmentsGetData = await db.admAttachmentsGet({ applicationAA, formKey })
-
-    return res.status(200).json(admAttachmentsGetData)
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
   } catch (err) {
     global.logger.error(err)
     return res.status(500).json({ success: false, reason: 'Internal Error' })
@@ -2194,7 +1543,6 @@ appRoutes.get('/admAttachmentsGet', authenticateToken, async (req, res, next) =>
 })
 
 //----------------------------------------------------------------------------------
-<<<<<<< HEAD
 // Node.js POST Routes FOR SP pr_Application_Delete
 //----------------------------------------------------------------------------------
 appRoutes.post('/applicationDelete', authenticateToken, async (req, res, next) => {
@@ -2208,91 +1556,24 @@ appRoutes.post('/applicationDelete', authenticateToken, async (req, res, next) =
       schema: {
       applicationAA: '1',
       formKey: 'RelocationDueToTwoYearRes'
-=======
-// Node.js POST Routes FOR SP pr_Adm_AttachmentsInsert
-//----------------------------------------------------------------------------------
-appRoutes.post('/admAttachmentsInsert', authenticateToken, async (req, res, next) => {
-  /*
-    #/api/admAttachmentsInsert
-    #swagger.tags = ['ADMIN']
-    #swagger.summary = 'Εισαγωγη συνημμενου απάντησης αίτησης '
-    #swagger.security = [{"Bearer": []}]
-    #swagger.parameters['obj'] = {
-      in: 'body',
-      description: 'Λεπτομέρειες Συνημμενου.',
-      schema: {
-        headerAA: '1',
-        attachmentType: 'ΑΛΛΟ ΅ΕΓΓΡΑΦΟ',
-        attachmentFileName: 'test.pdf',
-        attachmentSize: '10MB',
-        attachment: '<base64 data>',
-        formKey: 'RelocationDueToTwoYearRes'
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
       }
     }
 */
   console.log(
     formatDateTime(new Date()),
-<<<<<<< HEAD
     ': /applicationDelete',
     'applicationAA =',
     req.body?.applicationAA,
-=======
-    ': /admAttachmentsInsert',
-    'headerAA =',
-    req.body?.headerAA,
-    'attachmentType =',
-    req.body?.attachmentType,
-    'attachmentFileName =',
-    req.body?.attachmentFileName,
-    'attachmentSize =',
-    req.body?.attachmentSize,
-    'attachment =',
-    req.body?.attachment,
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
     'formKey =',
     req.body?.formKey
   )
   try {
-<<<<<<< HEAD
     const applicationAA = req.body?.applicationAA || null
     const formKey = req.body?.formKey || null
     if (!applicationAA) {
       return res
         .status(400)
         .json({ success: false, reason: 'Bad Request, applicationAA must have a value.' })
-=======
-    const headerAA = req.body?.headerAA || null
-    const attachmentType = req.body?.attachmentType || null
-    const attachmentFileName = req.body?.attachmentFileName || null
-    const attachmentSize = req.body?.attachmentSize || null
-    const attachment = req.body?.attachment || null
-    const formKey = req.body?.formKey || null
-    if (!headerAA) {
-      return res
-        .status(400)
-        .json({ success: false, reason: 'Bad Request, headerAA must have a value.' })
-    }
-    if (!attachmentType) {
-      return res
-        .status(400)
-        .json({ success: false, reason: 'Bad Request, attachmentType must have a value.' })
-    }
-    if (!attachmentFileName) {
-      return res
-        .status(400)
-        .json({ success: false, reason: 'Bad Request, attachmentFileName must have a value.' })
-    }
-    if (!attachmentSize) {
-      return res
-        .status(400)
-        .json({ success: false, reason: 'Bad Request, attachmentSize must have a value.' })
-    }
-    if (!attachment) {
-      return res
-        .status(400)
-        .json({ success: false, reason: 'Bad Request, attachment must have a value.' })
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
     }
     if (!formKey) {
       return res
@@ -2300,22 +1581,9 @@ appRoutes.post('/admAttachmentsInsert', authenticateToken, async (req, res, next
         .json({ success: false, reason: 'Bad Request, formKey must have a value.' })
     }
 
-<<<<<<< HEAD
     const applicationDeleteData = await db.applicationDelete({ applicationAA, formKey })
 
     return res.status(200).json(applicationDeleteData)
-=======
-    const admAttachmentsInsertData = await db.admAttachmentsInsert({
-      headerAA,
-      attachmentType,
-      attachmentFileName,
-      attachmentSize,
-      attachment,
-      formKey,
-    })
-
-    return res.status(200).json(admAttachmentsInsertData)
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
   } catch (err) {
     global.logger.error(err)
     return res.status(500).json({ success: false, reason: 'Internal Error' })
@@ -2323,7 +1591,6 @@ appRoutes.post('/admAttachmentsInsert', authenticateToken, async (req, res, next
 })
 
 //----------------------------------------------------------------------------------
-<<<<<<< HEAD
 // Node.js GET Routes FOR SP pr_Citizen_MyApplications
 //----------------------------------------------------------------------------------
 appRoutes.get('/citizenMyApplications', authenticateToken, async (req, res, next) => {
@@ -2359,33 +1626,6 @@ appRoutes.get('/citizenMyApplications', authenticateToken, async (req, res, next
     const citizenMyApplicationsData = await db.citizenMyApplications({ citizenAA })
 
     return res.status(200).json(citizenMyApplicationsData)
-=======
-// Node.js POST Routes FOR SP pr_Adm_Attachments_DeleteById
-//----------------------------------------------------------------------------------
-appRoutes.post('/admAttachmentsDeleteById', authenticateToken, async (req, res, next) => {
-  /*
-    #/api/admAttachmentsDeleteById
-    #swagger.tags = ['ADMIN']
-    #swagger.summary = 'Διαγραφη συνημμενου απάντησης αίτησης '
-    #swagger.security = [{"Bearer": []}]
-    #swagger.parameters['obj'] = {
-      in: 'body',
-      schema: {
-        ΑΑ: '1'
-      }
-    }
-*/
-  console.log(formatDateTime(new Date()), ': /admAttachmentsDeleteById', 'AA =', req.body?.AA)
-  try {
-    const AA = req.body?.AA || null
-    if (!AA) {
-      return res.status(400).json({ success: false, reason: 'Bad Request, AA must have a value.' })
-    }
-
-    const admAttachmentsDeleteByIdData = await db.admAttachmentsDeleteById({ AA })
-
-    return res.status(200).json(admAttachmentsDeleteByIdData)
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
   } catch (err) {
     global.logger.error(err)
     return res.status(500).json({ success: false, reason: 'Internal Error' })
@@ -2393,7 +1633,6 @@ appRoutes.post('/admAttachmentsDeleteById', authenticateToken, async (req, res, 
 })
 
 //----------------------------------------------------------------------------------
-<<<<<<< HEAD
 // Node.js GET Routes FOR SP pr_AttachmentsGetForDisplay
 //----------------------------------------------------------------------------------
 appRoutes.get('/attachmentsGetForDisplay', authenticateToken, async (req, res, next) => {
@@ -2413,40 +1652,15 @@ appRoutes.get('/attachmentsGetForDisplay', authenticateToken, async (req, res, n
 
   */
   console.log(formatDateTime(new Date()), ': /attachmentsGetForDisplay', 'AA=', req.query?.AA)
-=======
-// Node.js GET Routes FOR SP pr_Adm_AttachmentsGetForDisplay
-//----------------------------------------------------------------------------------
-appRoutes.get('/admAttachmentsGetForDisplay', authenticateToken, async (req, res, next) => {
-  /*
-    #/api/getAllFormsForAdminFiltered
-    #swagger.tags = ['ADMIN']
-    #swagger.summary = 'Επιστρέφει attachmens μιας απαντησης αιτησης.'
-    #swagger.security = [{"Bearer": []}]
-    #swagger.parameters['AA'] = {
-        in: 'query',
-        description: 'Attachment Α/Α.',
-        required: false,
-        type: 'number',
-        example: '1'
-      }
-  */
-  console.log(formatDateTime(new Date()), ': /admAttachmentsGetForDisplay', 'AA=', req.query?.AA)
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
   try {
     const AA = req.query?.AA || 0
     if (!AA) {
       return res.status(400).json({ success: false, reason: 'Bad Request, AA must have a value.' })
     }
 
-<<<<<<< HEAD
     const attachmentsGetForDisplayData = await db.attachmentsGetForDisplay({ AA })
 
     return res.status(200).json(attachmentsGetForDisplayData)
-=======
-    const admAttachmentsGetForDisplayData = await db.admAttachmentsGetForDisplay({ AA })
-
-    return res.status(200).json(admAttachmentsGetForDisplayData)
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
   } catch (err) {
     global.logger.error(err)
     return res.status(500).json({ success: false, reason: 'Internal Error' })
@@ -2454,7 +1668,6 @@ appRoutes.get('/admAttachmentsGetForDisplay', authenticateToken, async (req, res
 })
 
 //----------------------------------------------------------------------------------
-<<<<<<< HEAD
 // Node.js POST Routes FOR SP pr_Attachments_DeleteById
 //----------------------------------------------------------------------------------
 appRoutes.post('/attachmentsDeleteById', authenticateToken, async (req, res, next) => {
@@ -2483,65 +1696,10 @@ appRoutes.post('/attachmentsDeleteById', authenticateToken, async (req, res, nex
     const attachmentsDeleteByIdData = await db.attachmentsDeleteById({ AA })
 
     return res.status(200).json(attachmentsDeleteByIdData)
-=======
-// Node.js POST Routes FOR SP pr_Adm_SubmitFormAnswer
-//----------------------------------------------------------------------------------
-appRoutes.post('/admSubmitFormAnswer', authenticateToken, async (req, res, next) => {
-  /*
-    #/api/admSubmitFormAnswer
-    #swagger.tags = ['ADMIN']
-    #swagger.summary = 'αποδοχή και απαντηση αιτησης πολίτη'
-    #swagger.security = [{"Bearer": []}]
-    #swagger.parameters['obj'] = {
-      in: 'body',
-      schema: {
-        applicationAA: '1',
-        formKey: 'RelocationDueToTwoYearRes',
-      }
-    }
-*/
-
-
-  console.log(
-    formatDateTime(new Date()),
-    ': /admSubmitFormAnswer',
-    'applicationAA =',
-    req.body?.applicationAA,
-    'formKey =',
-    req.body?.formKey
-  )
-  try {
-    const applicationAA = req.body?.applicationAA || null
-    const formKey = req.body?.formKey || null
-
-    if (!applicationAA) {
-      return res
-        .status(400)
-        .json({ success: false, reason: 'Bad Request, applicationAA must have a value.' })
-    }
-    if (!formKey) {
-      return res
-        .status(400)
-        .json({ success: false, reason: 'Bad Request, formKey must have a value.' })
-    }
-    let user = req.user
-    console.log('user = ', user)
-
-    const admSubmitFormAnswerData = await db.admSubmitFormAnswer({
-      applicationAA,
-      formKey,
-      userAA: user.AA,
-    })
-
-    return res.status(200).json(admSubmitFormAnswerData)
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
   } catch (err) {
     global.logger.error(err)
     return res.status(500).json({ success: false, reason: 'Internal Error' })
   }
 })
-<<<<<<< HEAD
 
-=======
->>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
 module.exports = appRoutes
