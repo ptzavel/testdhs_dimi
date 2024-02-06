@@ -1,5 +1,50 @@
 <div class="logout-message">
     <h1>Logged Out</h1>
     <p>You have been successfully logged out.</p>
-    <a href="/test">Home</a>
+
 </div>
+<script>
+    function sendToken (socket_id, jwtAccesstoken) {
+        var formBody = []
+        var encodedKey = encodeURIComponent('socket_id')
+        var encodedSocket_id = encodeURIComponent(socket_id)
+        formBody.push(encodedKey + '=' + encodedSocket_id)
+
+        var encodedKey = encodeURIComponent('jwtAccesstoken')
+        var encodedJwtAccesstoken = encodeURIComponent(jwtAccesstoken)
+        formBody.push(encodedKey + '=' + encodedJwtAccesstoken)
+
+        formBody = formBody.join('&')
+        console.log('formBody', formBody)
+
+        fetch('/sendToken', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: formBody,
+        })
+            .then((res) => res.json())
+            .then((data) => {
+            })
+            .catch((error) => {
+                res.status(500).json({ error: error.message })
+            })
+            .finally(() => {
+                setTimeout(() => { window.close() }, 1200)
+            })
+    }
+
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+        let jwtAccesstoken=''
+
+        window?.ReactNativeWebView?.postMessage(msg)
+        let socket_id = localStorage.getItem('socket_id')
+        if (socket_id) {
+            sendToken(socket_id, jwtAccesstoken)
+        }
+
+    });
+</script>

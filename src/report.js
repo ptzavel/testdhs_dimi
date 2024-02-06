@@ -237,25 +237,23 @@ const showForm = (form) => {
           text: form[i]?.title + (form[i]?.title ? ':  ' : ''),
           style: 'contentBold',
           color: colors.TEXT,
-        },
+        }
+      ],
+    })
+
+    out.push({
+      alignment: 'left',
+      columns: [
         {
           text: form[i]?.contents,
           style: 'content',
           color: colors.TEXT,
         },
-        {
-          text: form[i + 1]?.title || '' + (form[i + 1]?.title ? ':  ' : ''),
-          style: 'contentBold',
-          color: colors.TEXT,
-        },
-        {
-          text: form[i + 1]?.contents || '',
-          style: 'content',
-          color: colors.TEXT,
-        },
       ],
     })
-    i = i + 2
+
+
+    i = i + 1
     if (i >= form.length) {
       ok = false
     }

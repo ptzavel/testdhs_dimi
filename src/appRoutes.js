@@ -720,124 +720,6 @@ appRoutes.get('/taxAuthority', authenticateToken, async (req, res, next) => {
 })
 
 //----------------------------------------------------------------------------------
-// Node.js POST Routes FOR SP pr_App03_GeneralApplication_Submit
-//----------------------------------------------------------------------------------
-appRoutes.post('/app03GeneralApplicationSubmit', authenticateToken, async (req, res, next) => {
-  /*
-    #/api/app03GeneralApplicationSubmit
-    #swagger.tags = ['DEME_CLIENT']
-    #swagger.summary = 'Υποβολή φορμας Γενική Αίτηση'
-    #swagger.security = [{"Bearer": []}]
-    #swagger.parameters['obj'] = {
-      in: 'body',
-      schema: {
-      applicationAA: '1'
-      }
-    }
-*/
-  console.log(
-    formatDateTime(new Date()),
-    ': /app03GeneralApplicationSubmit',
-    'applicationAA =',
-    req.body?.applicationAA
-  )
-  try {
-    const applicationAA = req.body?.applicationAA || null
-    if (!applicationAA) {
-      return res
-        .status(400)
-        .json({ success: false, reason: 'Bad Request, applicationAA must have a value.' })
-    }
-
-    const isFormReadyForSubmission = await db.app03GeneralApplicationIsReadyForSubmission({
-      applicationAA,
-    })
-    console.log('isFormReadyForSubmission=', isFormReadyForSubmission)
-    if (!isFormReadyForSubmission.readyToSubmit) {
-      return res.status(200).json({ success: false, reason: isFormReadyForSubmission.reason })
-    }
-
-    const formPdfData = await db.app03GeneralApplicationPdf({ applicationAA })
-
-    const irisSubject = isFormReadyForSubmission.irisSubject
-    const vatNumber = isFormReadyForSubmission.vatNumber
-    const registrationNumber = isFormReadyForSubmission.regno
-    const sender = isFormReadyForSubmission.sender
-
-    const OUT_PATH = path.resolve(__dirname, '../pdfs/' + vatNumber.trim())
-    await mkdirp(OUT_PATH)
-
-    console.log('OUT_PATH ', OUT_PATH)
-    const fileName = 'FORM.pdf'
-    //const PATH_TO_PDF = OUT_PATH + '\\' + fileName
-    const PATH_TO_PDF = path.join(OUT_PATH, fileName)
-
-    IRIS_API_KEY = await getIrisCredentials()
-    IRIS_RECIPIENT_ID = await getIrisRecipients()
-
-    console.log('IRIS_RECIPIENT_ID=', IRIS_RECIPIENT_ID)
-
-    await doReport(OUT_PATH, fileName, formPdfData, vatNumber, async function (pdfDocString) {
-      console.log('pdfDocString')
-      const FormAttachmentInsUpdRes = await db.app03GeneralApplicationFormAttachmentInsUpd({
-        headerAA: applicationAA,
-        attachmentType: 'FORM',
-        attachmentFileName: 'FORM.pdf',
-        attachment: pdfDocString,
-      })
-    })
-
-    let attachmentsForIris = await db.app03GeneralApplicationAttachmentsGetForIris({
-      applicationAA,
-    })
-
-    let pdfArray = [{ pathToPdf: PATH_TO_PDF, pdfName: fileName }]
-    //pdfArray[i].pathToPdf), pdfArray[i].pdfName
-    for (let i = 0; i < attachmentsForIris.length; i++) {
-      console.log(
-        'attachmentsForIris[i].attachmentFileName=',
-        attachmentsForIris[i].attachmentFileName
-      )
-      let pdfEncoded = attachmentsForIris[i].attachment
-      pdfEncoded = pdfEncoded.replace('data:application/pdf;base64,', '')
-      var bin = atob(pdfEncoded)
-      let pathToNextPdf = path.join(OUT_PATH, attachmentsForIris[i].attachmentFileName)
-      await fs2.writeFile(pathToNextPdf, bin, 'binary')
-      pdfArray.push({ pathToPdf: pathToNextPdf, pdfName: attachmentsForIris[i].attachmentFileName })
-    }
-
-    let irisData = await uploadManyDocumentToIris(
-      pdfArray,
-      irisSubject,
-      registrationNumber,
-      sender,
-      IRIS_RECIPIENT_ID
-    )
-    rimraf(OUT_PATH, { preserveRoot: false })
-
-    // console.log('{ applicationAA: applicationAA, irisId: irisData[0].id }=', {
-    //   applicationAA: applicationAA,
-    //   irisId: irisData[0].id,
-    // })
-    //     console.log('irisData=', irisData)
-
-    await db.app03GeneralApplicationIrisUploadsIns({
-      applicationAA: applicationAA,
-      irisId: irisData[0].Id,
-    })
-
-    const app03GeneralApplicationSubmitData = await db.app03GeneralApplicationSubmit({
-      applicationAA,
-    })
-
-    return res.status(200).json(app03GeneralApplicationSubmitData)
-  } catch (err) {
-    global.logger.error(err)
-    return res.status(500).json({ success: false, reason: 'Internal Error' })
-  }
-})
-
-//----------------------------------------------------------------------------------
 // Node.js POST Routes FOR SP pr_App03_GeneralApplication_New
 //----------------------------------------------------------------------------------
 appRoutes.post('/app03GeneralApplicationNew', authenticateToken, async (req, res, next) => {
@@ -987,7 +869,7 @@ appRoutes.get('/getFormData', async (req, res, next) => {
 appRoutes.post('/applicationInsUpd', authenticateToken, async (req, res, next) => {
   /*
     #/api/applicationInsUpd
-    #swagger.tags = ['DEME_CLIENT']
+    #swagger.tags = ['DEME_CLIENT_ALL']
     #swagger.summary = 'Εισαγωγή/Ενημέρωση οποιασδηποτε φορμας'
     #swagger.security = [{"Bearer": []}]
     #swagger.parameters['obj'] = {
@@ -1098,6 +980,25 @@ appRoutes.post('/applicationInsUpd', authenticateToken, async (req, res, next) =
         .json({ success: false, reason: 'Bad Request, formKey must have a value.' })
     }
 
+
+console.log('object = ', {
+  applicationAA,
+  demeAA,
+  surname,
+  firstName,
+  fatherName,
+  vatNumber,
+  dob,
+  idCardNo,
+  address,
+  taxAuthority,
+  email,
+  telephone,
+  zip,
+  formKey,
+  jsonData,
+})
+
     const applicationInsUpdData = await db.applicationInsUpd({
       applicationAA,
       demeAA,
@@ -1117,6 +1018,684 @@ appRoutes.post('/applicationInsUpd', authenticateToken, async (req, res, next) =
     })
 
     return res.status(200).json(applicationInsUpdData)
+  } catch (err) {
+    global.logger.error(err)
+    return res.status(500).json({ success: false, reason: 'Internal Error' })
+  }
+})
+
+//----------------------------------------------------------------------------------
+// Node.js POST Routes FOR SP pr_App03_GeneralApplication_Submit
+//----------------------------------------------------------------------------------
+appRoutes.post('/app03GeneralApplicationSubmit', authenticateToken, async (req, res, next) => {
+  /*
+    #/api/app03GeneralApplicationSubmit
+    #swagger.tags = ['DEME_CLIENT']
+    #swagger.summary = 'Υποβολή φορμας Γενική Αίτηση'
+    #swagger.security = [{"Bearer": []}]
+    #swagger.parameters['obj'] = {
+      in: 'body',
+      schema: {
+      applicationAA: '1'
+      }
+    }
+*/
+  console.log(
+    formatDateTime(new Date()),
+    ': /app03GeneralApplicationSubmit',
+    'applicationAA =',
+    req.body?.applicationAA
+  )
+  try {
+    const applicationAA = req.body?.applicationAA || null
+    if (!applicationAA) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, applicationAA must have a value.' })
+    }
+
+    const isFormReadyForSubmission = await db.app03GeneralApplicationIsReadyForSubmission({
+      applicationAA,
+    })
+    console.log('isFormReadyForSubmission=', isFormReadyForSubmission)
+    if (!isFormReadyForSubmission.readyToSubmit) {
+      return res.status(200).json({ success: false, reason: isFormReadyForSubmission.reason })
+    }
+
+    const formPdfData = await db.app03GeneralApplicationPdf({ applicationAA })
+
+    const irisSubject = isFormReadyForSubmission.irisSubject
+    const vatNumber = isFormReadyForSubmission.vatNumber
+    const registrationNumber = isFormReadyForSubmission.regno
+    const sender = isFormReadyForSubmission.sender
+
+    const OUT_PATH = path.resolve(__dirname, '../pdfs/' + vatNumber.trim())
+    await mkdirp(OUT_PATH)
+
+    console.log('OUT_PATH ', OUT_PATH)
+    const fileName = 'FORM.pdf'
+    //const PATH_TO_PDF = OUT_PATH + '\\' + fileName
+    const PATH_TO_PDF = path.join(OUT_PATH, fileName)
+
+    IRIS_API_KEY = await getIrisCredentials()
+    IRIS_RECIPIENT_ID = await getIrisRecipients()
+
+    console.log('IRIS_RECIPIENT_ID=', IRIS_RECIPIENT_ID)
+
+    await doReport(OUT_PATH, fileName, formPdfData, vatNumber, async function (pdfDocString) {
+      console.log('pdfDocString')
+      const FormAttachmentInsUpdRes = await db.app03GeneralApplicationFormAttachmentInsUpd({
+        headerAA: applicationAA,
+        attachmentType: 'FORM',
+        attachmentFileName: 'FORM.pdf',
+        attachment: pdfDocString,
+      })
+    })
+
+    let attachmentsForIris = await db.app03GeneralApplicationAttachmentsGetForIris({
+      applicationAA,
+    })
+
+    let pdfArray = [{ pathToPdf: PATH_TO_PDF, pdfName: fileName }]
+    //pdfArray[i].pathToPdf), pdfArray[i].pdfName
+    for (let i = 0; i < attachmentsForIris.length; i++) {
+      console.log(
+        'attachmentsForIris[i].attachmentFileName=',
+        attachmentsForIris[i].attachmentFileName
+      )
+      let pdfEncoded = attachmentsForIris[i].attachment
+      pdfEncoded = pdfEncoded.replace('data:application/pdf;base64,', '')
+      var bin = atob(pdfEncoded)
+      let pathToNextPdf = path.join(OUT_PATH, attachmentsForIris[i].attachmentFileName)
+      await fs2.writeFile(pathToNextPdf, bin, 'binary')
+      pdfArray.push({ pathToPdf: pathToNextPdf, pdfName: attachmentsForIris[i].attachmentFileName })
+    }
+
+    let irisData = await uploadManyDocumentToIris(
+      pdfArray,
+      irisSubject,
+      registrationNumber,
+      sender,
+      IRIS_RECIPIENT_ID
+    )
+    rimraf(OUT_PATH, { preserveRoot: false })
+
+    // console.log('{ applicationAA: applicationAA, irisId: irisData[0].id }=', {
+    //   applicationAA: applicationAA,
+    //   irisId: irisData[0].id,
+    // })
+    //     console.log('irisData=', irisData)
+
+    await db.app03GeneralApplicationIrisUploadsIns({
+      applicationAA: applicationAA,
+      irisId: irisData[0].Id,
+    })
+
+    const app03GeneralApplicationSubmitData = await db.app03GeneralApplicationSubmit({
+      applicationAA,
+    })
+
+    return res.status(200).json(app03GeneralApplicationSubmitData)
+  } catch (err) {
+    global.logger.error(err)
+    return res.status(500).json({ success: false, reason: 'Internal Error' })
+  }
+})
+
+//----------------------------------------------------------------------------------
+//GENERIC SP ROUTES
+//----------------------------------------------------------------------------------
+
+//----------------------------------------------------------------------------------
+// Node.js GET Routes FOR SP pr_Application_Get
+//----------------------------------------------------------------------------------
+appRoutes.get('/applicationGet', authenticateToken, async (req, res, next) => {
+  /*
+    #/api/applicationGet
+    #swagger.tags = ['DEME_CLIENT_ALL']
+    #swagger.summary = 'Επιστρέφει λεπτομερειες μιας επιλεγμενης φορμας .'
+    #swagger.security = [{"Bearer": []}]
+    #swagger.parameters['applicationAA'] = {
+        in: 'query',
+        description: 'Το id της φόρμας.',
+        required: true,
+        type: 'integer',
+        example: '1'
+      }
+    }
+    #swagger.parameters['formKey'] = {
+        in: 'query',
+        description: 'Το formKey της φόρμας.',
+        required: true,
+        type: 'string',
+        example: 'ApplicationToACollectiveBo'
+      }
+    }
+  */
+  console.log(
+    formatDateTime(new Date()),
+    ': /applicationGet',
+    'applicationAA=',
+    req.query?.applicationAA,
+    'formKey=',
+    req.query?.formKey
+  )
+  try {
+    const applicationAA = req.query?.applicationAA || 0
+    const formKey = req.query?.formKey || null
+    if (!applicationAA) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, applicationAA must have a value.' })
+    }
+    if (!formKey) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, formKey must have a value.' })
+    }
+
+    const applicationGetData = await db.applicationGet({ applicationAA, formKey })
+
+    return res.status(200).json(applicationGetData)
+  } catch (err) {
+    global.logger.error(err)
+    return res.status(500).json({ success: false, reason: 'Internal Error' })
+  }
+})
+
+//----------------------------------------------------------------------------------
+// Node.js GET Routes FOR SP pr_AttachmentsGet
+//----------------------------------------------------------------------------------
+appRoutes.get('/attachmentsGet', authenticateToken, async (req, res, next) => {
+  /*
+    #/api/attachmentsGet
+    #swagger.tags = ['DEME_CLIENT_ALL']
+    #swagger.summary = 'Επιστρέφει πληροφορίες για τα συνημμενα μιας φορμας .'
+    #swagger.security = [{"Bearer": []}]
+    #swagger.parameters['applicationAA'] = {
+        in: 'query',
+        description: 'Το id της φόρμας.',
+        required: true,
+        type: 'integer',
+        example: '1'
+      }
+    }
+    #swagger.parameters['formKey'] = {
+        in: 'query',
+        description: 'Το formKey της φόρμας.',
+        required: true,
+        type: 'string',
+        example: 'ApplicationToACollectiveBo'
+      }
+    }
+  */
+  console.log(
+    formatDateTime(new Date()),
+    ': /attachmentsGet',
+    'applicationAA=',
+    req.query?.applicationAA,
+    'formKey=',
+    req.query?.formKey
+  )
+  try {
+    const applicationAA = req.query?.applicationAA || 0
+    const formKey = req.query?.formKey || null
+    if (!applicationAA) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, applicationAA must have a value.' })
+    }
+    if (!formKey) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, formKey must have a value.' })
+    }
+
+    const attachmentsGetData = await db.attachmentsGet({ applicationAA, formKey })
+
+    return res.status(200).json(attachmentsGetData)
+  } catch (err) {
+    global.logger.error(err)
+    return res.status(500).json({ success: false, reason: 'Internal Error' })
+  }
+})
+
+//----------------------------------------------------------------------------------
+// Node.js POST Routes FOR SP pr_AttachmentsInsert
+//----------------------------------------------------------------------------------
+appRoutes.post('/attachmentsInsert', authenticateToken, async (req, res, next) => {
+  /*
+    #/api/app03GeneralApplicationAttachmentsInsert
+    #swagger.tags = ['DEME_CLIENT_ALL']
+    #swagger.summary = 'Εισαγωγη συνημμενου για φορμα Γενική Αίτηση'
+    #swagger.security = [{"Bearer": []}]
+    #swagger.parameters['obj'] = {
+      in: 'body',
+      description: 'Λεπτομέρειες Συνημμενου.',
+      schema: {
+        headerAA: '1',
+        attachmentType: 'ΑΛΛΟ ΅ΕΓΓΡΑΦΟ',
+        attachmentFileName: 'test.pdf',
+        attachment: '<base64 data>',
+        formKey: 'ApplicationToACollectiveBo'
+      }
+    }
+*/
+  console.log(
+    formatDateTime(new Date()),
+    ': /attachmentsInsert',
+    'headerAA =',
+    req.body?.headerAA,
+    'attachmentType =',
+    req.body?.attachmentType,
+    'attachmentFileName =',
+    req.body?.attachmentFileName,
+    'attachment =',
+    req.body?.attachment,
+    'formKey =',
+    req.body?.formKey
+  )
+  try {
+    const headerAA = req.body?.headerAA || null
+    const attachmentType = req.body?.attachmentType || null
+    const attachmentFileName = req.body?.attachmentFileName || null
+    const attachment = req.body?.attachment || null
+    const formKey = req.body?.formKey || null
+    if (!headerAA) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, headerAA must have a value.' })
+    }
+    if (!attachmentType) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, attachmentType must have a value.' })
+    }
+    if (!attachmentFileName) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, attachmentFileName must have a value.' })
+    }
+    if (!attachment) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, attachment must have a value.' })
+    }
+    if (!formKey) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, formKey must have a value.' })
+    }
+
+    const attachmentsInsertData = await db.attachmentsInsert({
+      headerAA,
+      attachmentType,
+      attachmentFileName,
+      attachment,
+      formKey,
+    })
+
+    return res.status(200).json(attachmentsInsertData)
+  } catch (err) {
+    global.logger.error(err)
+    return res.status(500).json({ success: false, reason: 'Internal Error' })
+  }
+})
+
+//----------------------------------------------------------------------------------
+// Node.js GET Routes FOR SP pr_Form_IsReadyForSubmission
+//----------------------------------------------------------------------------------
+appRoutes.get('/formIsReadyForSubmission', authenticateToken, async (req, res, next) => {
+  /*
+    #/api/formIsReadyForSubmission
+    #swagger.tags = ['DEME_CLIENT_ALL']
+    #swagger.summary = 'Επιστρέφει 1 αν η form ειναι ετοιμη για υποβολή, 0 αν οχι .'
+    #swagger.security = [{"Bearer": []}]
+    #swagger.parameters['applicationAA'] = {
+        in: 'query',
+        description: 'Το id της φόρμας.',
+        required: true,
+        type: 'integer',
+        example: '1'
+      }
+    }
+    #swagger.parameters['formKey'] = {
+        in: 'query',
+        description: 'Το formKey της φόρμας.',
+        required: true,
+        type: 'string',
+        example: 'ApplicationToACollectiveBo'
+      }
+    }
+  */
+  console.log(
+    formatDateTime(new Date()),
+    ': /formIsReadyForSubmission',
+    'applicationAA=',
+    req.query?.applicationAA,
+    'formKey=',
+    req.query?.formKey
+  )
+  try {
+    const applicationAA = req.query?.applicationAA || 0
+    const formKey = req.query?.formKey || null
+    if (!applicationAA) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, applicationAA must have a value.' })
+    }
+    if (!formKey) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, formKey must have a value.' })
+    }
+
+    const formIsReadyForSubmissionData = await db.formIsReadyForSubmission({
+      applicationAA,
+      formKey,
+    })
+
+    return res.status(200).json(formIsReadyForSubmissionData)
+  } catch (err) {
+    global.logger.error(err)
+    return res.status(500).json({ success: false, reason: 'Internal Error' })
+  }
+})
+
+//----------------------------------------------------------------------------------
+// Node.js POST Routes FOR SP pr_Form_New
+//----------------------------------------------------------------------------------
+appRoutes.post('/formNew', authenticateToken, async (req, res, next) => {
+  /*
+    #/api/formNew
+    #swagger.tags = ['DEME_CLIENT_ALL']
+    #swagger.summary = 'Αρχική Εισαγωγή Φόρμας με μειωμενα πεδια'
+    #swagger.security = [{"Bearer": []}]
+    #swagger.parameters['obj'] = {
+      in: 'body',
+      description: 'Αρχική Εισαγωγή Φόρμας με μειωμενα πεδια',
+      schema: {
+      demeAA: '1',
+      surname: 'Τεστοπουλος',
+      firstName: '',
+      fatherName: '',
+      vatNumber: '099999999',
+      formKey: 'RelocationDueToTwoYearRes'
+      }
+    }
+*/
+  console.log(
+    formatDateTime(new Date()),
+    ': /formNew',
+    'demeAA =',
+    req.body?.demeAA,
+    'surname =',
+    req.body?.surname,
+    'firstName =',
+    req.body?.firstName,
+    'fatherName =',
+    req.body?.fatherName,
+    'vatNumber =',
+    req.body?.vatNumber,
+    'formKey =',
+    req.body?.formKey
+  )
+  try {
+    const demeAA = req.body?.demeAA || null
+    const surname = req.body?.surname || null
+    const firstName = req.body?.firstName || null
+    const fatherName = req.body?.fatherName || null
+    const vatNumber = req.body?.vatNumber || null
+    const formKey = req.body?.formKey || null
+    if (!demeAA) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, demeAA must have a value.' })
+    }
+    if (!surname) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, surname must have a value.' })
+    }
+    if (!firstName) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, firstName must have a value.' })
+    }
+    if (!fatherName) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, fatherName must have a value.' })
+    }
+    if (!vatNumber) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, vatNumber must have a value.' })
+    }
+    if (!formKey) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, formKey must have a value.' })
+    }
+
+    const formNewData = await db.formNew({
+      demeAA,
+      surname,
+      firstName,
+      fatherName,
+      vatNumber,
+      formKey,
+    })
+
+    return res.status(200).json(formNewData)
+  } catch (err) {
+    global.logger.error(err)
+    return res.status(500).json({ success: false, reason: 'Internal Error' })
+  }
+})
+
+//----------------------------------------------------------------------------------
+// Node.js POST Routes FOR SP pr_Form_Submit
+//----------------------------------------------------------------------------------
+appRoutes.post('/formSubmit', authenticateToken, async (req, res, next) => {
+  /*
+    #/api/formSubmit
+    #swagger.tags = ['DEME_CLIENT_ALL']
+    #swagger.summary = 'Υποβολή φορμας '
+    #swagger.security = [{"Bearer": []}]
+    #swagger.parameters['obj'] = {
+      in: 'body',
+      schema: {
+      applicationAA: '1',
+      formKey: 'RelocationDueToTwoYearRes'
+      }
+    }
+*/
+  console.log(
+    formatDateTime(new Date()),
+    ': /formSubmit',
+    'applicationAA =',
+    req.body?.applicationAA,
+    'formKey =',
+    req.body?.formKey
+  )
+  try {
+    const applicationAA = req.body?.applicationAA || null
+    const formKey = req.body?.formKey || null
+    if (!applicationAA) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, applicationAA must have a value.' })
+    }
+    if (!formKey) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, formKey must have a value.' })
+    }
+
+    const formSubmitData = await db.formSubmit({ applicationAA, formKey })
+
+    return res.status(200).json(formSubmitData)
+  } catch (err) {
+    global.logger.error(err)
+    return res.status(500).json({ success: false, reason: 'Internal Error' })
+  }
+})
+
+//----------------------------------------------------------------------------------
+// Node.js POST Routes FOR SP pr_Application_Delete
+//----------------------------------------------------------------------------------
+appRoutes.post('/applicationDelete', authenticateToken, async (req, res, next) => {
+  /*
+    #/api/applicationDelete
+    #swagger.tags = ['DEME_CLIENT_ALL']
+    #swagger.summary = 'Διαγραφή προσωρινά αποθηκευμένης αίτησης'
+    #swagger.security = [{"Bearer": []}]
+    #swagger.parameters['obj'] = {
+      in: 'body',
+      schema: {
+      applicationAA: '1',
+      formKey: 'RelocationDueToTwoYearRes'
+      }
+    }
+*/
+  console.log(
+    formatDateTime(new Date()),
+    ': /applicationDelete',
+    'applicationAA =',
+    req.body?.applicationAA,
+    'formKey =',
+    req.body?.formKey
+  )
+  try {
+    const applicationAA = req.body?.applicationAA || null
+    const formKey = req.body?.formKey || null
+    if (!applicationAA) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, applicationAA must have a value.' })
+    }
+    if (!formKey) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, formKey must have a value.' })
+    }
+
+    const applicationDeleteData = await db.applicationDelete({ applicationAA, formKey })
+
+    return res.status(200).json(applicationDeleteData)
+  } catch (err) {
+    global.logger.error(err)
+    return res.status(500).json({ success: false, reason: 'Internal Error' })
+  }
+})
+
+//----------------------------------------------------------------------------------
+// Node.js GET Routes FOR SP pr_Citizen_MyApplications
+//----------------------------------------------------------------------------------
+appRoutes.get('/citizenMyApplications', authenticateToken, async (req, res, next) => {
+  /*
+    #/api/citizenMyApplications
+    #swagger.tags = ['DEME_CLIENT_ALL']
+    #swagger.summary = 'Οι φορμες μου (πρωτη σελιδα)'
+    #swagger.security = [{"Bearer": []}]
+    #swagger.parameters['citizenAA'] = {
+        in: 'query',
+        description: 'Το id του πολιτη.',
+        required: true,
+        type: 'integer',
+        example: '1'
+      }
+    }
+
+  */
+  console.log(
+    formatDateTime(new Date()),
+    ': /citizenMyApplications',
+    'citizenAA=',
+    req.query?.citizenAA
+  )
+  try {
+    const citizenAA = req.query?.citizenAA || 0
+    if (!citizenAA) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, citizenAA must have a value.' })
+    }
+
+    const citizenMyApplicationsData = await db.citizenMyApplications({ citizenAA })
+
+    return res.status(200).json(citizenMyApplicationsData)
+  } catch (err) {
+    global.logger.error(err)
+    return res.status(500).json({ success: false, reason: 'Internal Error' })
+  }
+})
+
+//----------------------------------------------------------------------------------
+// Node.js GET Routes FOR SP pr_AttachmentsGetForDisplay
+//----------------------------------------------------------------------------------
+appRoutes.get('/attachmentsGetForDisplay', authenticateToken, async (req, res, next) => {
+  /*
+    #/api/attachmentsGetForDisplay
+    #swagger.tags = ['DEME_CLIENT_ALL']
+    #swagger.summary = 'Φερνει 1 attachment στιε φορμς πολιτη σε μορφη base 64 encoded PDF'
+    #swagger.security = [{"Bearer": []}]
+    #swagger.parameters['citizenAA'] = {
+        in: 'query',
+        description: 'Το id του πολιτη.',
+        required: true,
+        type: 'integer',
+        example: '1'
+      }
+    }
+
+  */
+  console.log(formatDateTime(new Date()), ': /attachmentsGetForDisplay', 'AA=', req.query?.AA)
+  try {
+    const AA = req.query?.AA || 0
+    if (!AA) {
+      return res.status(400).json({ success: false, reason: 'Bad Request, AA must have a value.' })
+    }
+
+    const attachmentsGetForDisplayData = await db.attachmentsGetForDisplay({ AA })
+
+    return res.status(200).json(attachmentsGetForDisplayData)
+  } catch (err) {
+    global.logger.error(err)
+    return res.status(500).json({ success: false, reason: 'Internal Error' })
+  }
+})
+
+//----------------------------------------------------------------------------------
+// Node.js POST Routes FOR SP pr_Attachments_DeleteById
+//----------------------------------------------------------------------------------
+appRoutes.post('/attachmentsDeleteById', authenticateToken, async (req, res, next) => {
+  /*
+    #/api/attachmentsDeleteById
+    #swagger.tags = ['DEME_CLIENT_ALL']
+    #swagger.summary = 'διαγραφη ενςο ενος συνημμενου απο τον πολιτη.'
+    #swagger.security = [{"Bearer": []}]
+    #swagger.parameters['AA'] = {
+        in: 'query',
+        description: 'Το id του συνημμενου.',
+        required: true,
+        type: 'integer',
+        example: '1'
+      }
+    }
+
+  */
+  console.log(formatDateTime(new Date()), ': /attachmentsDeleteById', 'AA =', req.body?.AA)
+  try {
+    const AA = req.body?.AA || null
+    if (!AA) {
+      return res.status(400).json({ success: false, reason: 'Bad Request, AA must have a value.' })
+    }
+
+    const attachmentsDeleteByIdData = await db.attachmentsDeleteById({ AA })
+
+    return res.status(200).json(attachmentsDeleteByIdData)
   } catch (err) {
     global.logger.error(err)
     return res.status(500).json({ success: false, reason: 'Internal Error' })
