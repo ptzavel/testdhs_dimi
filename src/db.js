@@ -389,6 +389,7 @@ class DB {
     }
   }
 
+<<<<<<< HEAD
   //GENERIC FORM SP
 
   async applicationGet({ applicationAA, formKey }) {
@@ -398,6 +399,17 @@ class DB {
         params: {
           applicationAA: { type: sql.INT, val: applicationAA },
           formKey: { type: sql.NVARCHAR, val: formKey },
+=======
+  //----------------------------------------------------------------------------------
+  // Node.js DB FOR SP pr_GetAllFormsForAdmin
+  //----------------------------------------------------------------------------------
+  async getAllFormsForAdmin({ demeAA }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_GetAllFormsForAdmin',
+        params: {
+          demeAA: { type: sql.INT, val: demeAA },
+>>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
         },
       })
       return data[0][0]
@@ -408,6 +420,7 @@ class DB {
   }
 
   //----------------------------------------------------------------------------------
+<<<<<<< HEAD
   // Node.js DB FOR SP pr_AttachmentsGet
   //----------------------------------------------------------------------------------
   async attachmentsGet({ applicationAA, formKey }) {
@@ -417,6 +430,34 @@ class DB {
         params: {
           applicationAA: { type: sql.INT, val: applicationAA },
           formKey: { type: sql.NVARCHAR, val: formKey },
+=======
+  // Node.js DB FOR SP pr_GetAllFormsForAdminFiltered
+  //----------------------------------------------------------------------------------
+  async getAllFormsForAdminFiltered({
+    demeAA,
+    sortingField,
+    sortingOrder,
+    formKey,
+    appStatus,
+    surname,
+    irisRegNo,
+    regNo,
+    vatNumber,
+  }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_GetAllFormsForAdminFiltered',
+        params: {
+          demeAA: { type: sql.INT, val: demeAA },
+          sortingField: { type: sql.NVARCHAR, val: sortingField },
+          sortingOrder: { type: sql.NVARCHAR, val: sortingOrder },
+          formKey: { type: sql.NVARCHAR, val: formKey },
+          appStatus: { type: sql.INT, val: appStatus },
+          surname: { type: sql.NVARCHAR, val: surname },
+          irisRegNo: { type: sql.NVARCHAR, val: irisRegNo },
+          regNo: { type: sql.NVARCHAR, val: regNo },
+          vatNumber: { type: sql.NVARCHAR, val: vatNumber },
+>>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
         },
       })
       return data[0][0]
@@ -427,6 +468,7 @@ class DB {
   }
 
   //----------------------------------------------------------------------------------
+<<<<<<< HEAD
   // Node.js DB FOR SP pr_AttachmentsGetForIris
   //----------------------------------------------------------------------------------
   async attachmentsGetForIris({ applicationAA, formKey }) {
@@ -436,6 +478,22 @@ class DB {
         params: {
           applicationAA: { type: sql.INT, val: applicationAA },
           formKey: { type: sql.NVARCHAR, val: formKey },
+=======
+  // Node.js DB FOR SP pr_Adm_UserCreate
+  //----------------------------------------------------------------------------------
+  async admUserCreate({ demeAA, userName, lastName, firstName, pwd, isAdmin, forms }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_Adm_UserCreate',
+        params: {
+          demeAA: { type: sql.INT, val: demeAA },
+          userName: { type: sql.NVARCHAR, val: userName },
+          lastName: { type: sql.NVARCHAR, val: lastName },
+          firstName: { type: sql.NVARCHAR, val: firstName },
+          pwd: { type: sql.NVARCHAR, val: pwd },
+          isAdmin: { type: sql.BOOLEAN, val: isAdmin },
+          forms: { type: sql.NVARCHAR, val: forms },
+>>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
         },
       })
       return data[0][0]
@@ -446,6 +504,7 @@ class DB {
   }
 
   //----------------------------------------------------------------------------------
+<<<<<<< HEAD
   // Node.js DB FOR SP pr_AttachmentsInsert
   //----------------------------------------------------------------------------------
   async attachmentsInsert({ headerAA, attachmentType, attachmentFileName, attachment, formKey }) {
@@ -461,6 +520,21 @@ class DB {
         },
       })
       return data[0][0]
+=======
+  // Node.js DB FOR SP pr_Adm_UserLogin
+  //----------------------------------------------------------------------------------
+  async admUserLogin({ userName, pwd, demeAA }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_Adm_UserLogin',
+        params: {
+          userName: { type: sql.NVARCHAR, val: userName },
+          pwd: { type: sql.NVARCHAR, val: pwd },
+          demeAA: { type: sql.INT, val: demeAA },
+        },
+      })
+      return data[0][0][0]
+>>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
     } catch (error) {
       global.logger.error(error)
       throw error
@@ -468,6 +542,7 @@ class DB {
   }
 
   //----------------------------------------------------------------------------------
+<<<<<<< HEAD
   // Node.js DB FOR SP pr_Form_IsReadyForSubmission
   //----------------------------------------------------------------------------------
   async formIsReadyForSubmission({ applicationAA, formKey }) {
@@ -477,6 +552,16 @@ class DB {
         params: {
           applicationAA: { type: sql.INT, val: applicationAA },
           formKey: { type: sql.NVARCHAR, val: formKey },
+=======
+  // Node.js DB FOR SP pr_GetLastFormsForAdmin
+  //----------------------------------------------------------------------------------
+  async getLastFormsForAdmin({ demeAA }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_GetLastFormsForAdmin',
+        params: {
+          demeAA: { type: sql.INT, val: demeAA },
+>>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
         },
       })
       return data[0][0]
@@ -486,6 +571,7 @@ class DB {
     }
   }
 
+<<<<<<< HEAD
   //----------------------------------------------------------------------------------
   // Node.js DB FOR SP pr_Form_New
   //----------------------------------------------------------------------------------
@@ -500,6 +586,39 @@ class DB {
           fatherName: { type: sql.NVARCHAR, val: fatherName },
           vatNumber: { type: sql.NVARCHAR, val: vatNumber },
           formKey: { type: sql.NVARCHAR, val: formKey },
+=======
+  //-------------- HERE ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------------
+  // Node.js DB FOR SP pr_Adm_GetAllFormsFiltered
+  //----------------------------------------------------------------------------------
+  async admGetAllFormsFiltered({
+    demeAA,
+    sortingField,
+    sortingOrder,
+    formKey,
+    appStatus,
+    surname,
+    irisRegNo,
+    regNo,
+    vatNumber,
+    userAA,
+  }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_Adm_GetAllFormsFiltered',
+        params: {
+          demeAA: { type: sql.INT, val: demeAA },
+          sortingField: { type: sql.NVARCHAR, val: sortingField },
+          sortingOrder: { type: sql.NVARCHAR, val: sortingOrder },
+          formKey: { type: sql.NVARCHAR, val: formKey },
+          appStatus: { type: sql.INT, val: appStatus },
+          surname: { type: sql.NVARCHAR, val: surname },
+          irisRegNo: { type: sql.NVARCHAR, val: irisRegNo },
+          regNo: { type: sql.NVARCHAR, val: regNo },
+          vatNumber: { type: sql.NVARCHAR, val: vatNumber },
+          userAA: { type: sql.INT, val: userAA },
+>>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
         },
       })
       return data[0][0]
@@ -510,6 +629,7 @@ class DB {
   }
 
   //----------------------------------------------------------------------------------
+<<<<<<< HEAD
   // Node.js DB FOR SP pr_Form_Pdf
   //----------------------------------------------------------------------------------
   async formPdf({ applicationAA, formKey }) {
@@ -519,6 +639,19 @@ class DB {
         params: {
           applicationAA: { type: sql.INT, val: applicationAA },
           formKey: { type: sql.NVARCHAR, val: formKey },
+=======
+  // Node.js DB FOR SP pr_Adm_SubmitFormForCorrections
+  //----------------------------------------------------------------------------------
+  async admSubmitFormForCorrections({ applicationAA, formKey, appStatusComments, userAA }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_Adm_SubmitFormForCorrections',
+        params: {
+          applicationAA: { type: sql.INT, val: applicationAA },
+          formKey: { type: sql.NVARCHAR, val: formKey },
+          appStatusComments: { type: sql.NVARCHAR, val: appStatusComments },
+          userAA: { type: sql.INT, val: userAA },
+>>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
         },
       })
       return data[0][0]
@@ -529,6 +662,7 @@ class DB {
   }
 
   //----------------------------------------------------------------------------------
+<<<<<<< HEAD
   // Node.js DB FOR SP pr_Form_Submit
   //----------------------------------------------------------------------------------
   async formSubmit({ applicationAA, formKey }) {
@@ -538,6 +672,19 @@ class DB {
         params: {
           applicationAA: { type: sql.INT, val: applicationAA },
           formKey: { type: sql.NVARCHAR, val: formKey },
+=======
+  // Node.js DB FOR SP pr_Adm_SubmitFormRejected
+  //----------------------------------------------------------------------------------
+  async admSubmitFormRejected({ applicationAA, formKey, appStatusComments, userAA }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_Adm_SubmitFormRejected',
+        params: {
+          applicationAA: { type: sql.INT, val: applicationAA },
+          formKey: { type: sql.NVARCHAR, val: formKey },
+          appStatusComments: { type: sql.NVARCHAR, val: appStatusComments },
+          userAA: { type: sql.INT, val: userAA },
+>>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
         },
       })
       return data[0][0]
@@ -548,6 +695,7 @@ class DB {
   }
 
   //----------------------------------------------------------------------------------
+<<<<<<< HEAD
   // Node.js DB FOR SP pr_FormAttachmentInsUpd
   //----------------------------------------------------------------------------------
   async formAttachmentInsUpd({
@@ -566,6 +714,17 @@ class DB {
           attachmentFileName: { type: sql.NVARCHAR, val: attachmentFileName },
           attachment: { type: sql.NVARCHAR, val: attachment },
           formKey: { type: sql.NVARCHAR, val: formKey },
+=======
+  // Node.js DB FOR SP pr_ADM_GetLastForms
+  //----------------------------------------------------------------------------------
+  async aDMGetLastForms({ demeAA, userAA }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_ADM_GetLastForms',
+        params: {
+          demeAA: { type: sql.INT, val: demeAA },
+          userAA: { type: sql.INT, val: userAA },
+>>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
         },
       })
       return data[0][0]
@@ -576,6 +735,7 @@ class DB {
   }
 
   //----------------------------------------------------------------------------------
+<<<<<<< HEAD
   // Node.js DB FOR SP pr_IrisUploads_Ins
   //----------------------------------------------------------------------------------
   async irisUploadsIns({ applicationAA, irisId, formKey }) {
@@ -586,6 +746,32 @@ class DB {
           applicationAA: { type: sql.INT, val: applicationAA },
           irisId: { type: sql.NVARCHAR, val: irisId },
           formKey: { type: sql.NVARCHAR, val: formKey },
+=======
+  // Node.js DB FOR SP pr_Adm_ApplicationStatistics
+  //----------------------------------------------------------------------------------
+  async admApplicationStatistics({ demeAA, userAA }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_Adm_ApplicationStatistics',
+        params: {
+          demeAA: { type: sql.INT, val: demeAA },
+          userAA: { type: sql.INT, val: userAA },
+        },
+      })
+      return data[0][0]
+    } catch (error) {
+      global.logger.error(error)
+      throw error
+    }
+  }
+  async admFormHistory({ applicationAA, formAA, userAA }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_Adm_FormHistory',
+        params: {
+          applicationAA: { type: sql.INT, val: applicationAA },
+          formAA: { type: sql.INT, val: formAA },
+          userAA: { type: sql.INT, val: userAA },
         },
       })
       return data[0][0]
@@ -596,12 +782,42 @@ class DB {
   }
 
   //----------------------------------------------------------------------------------
+  // Node.js DB FOR SP pr_Adm_UndoAction
+  //----------------------------------------------------------------------------------
+  async admUndoAction({ applicationAA, formKey, userAA }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_Adm_UndoAction',
+        params: {
+          applicationAA: { type: sql.INT, val: applicationAA },
+          formKey: { type: sql.NVARCHAR, val: formKey },
+          userAA: { type: sql.INT, val: userAA },
+>>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
+        },
+      })
+      return data[0][0]
+    } catch (error) {
+      global.logger.error(error)
+      throw error
+    }
+  }
+
+  //----------------------------------------------------------------------------------
+<<<<<<< HEAD
   // Node.js DB FOR SP pr_Application_Delete
   //----------------------------------------------------------------------------------
   async applicationDelete({ applicationAA, formKey }) {
     try {
       const data = await sql.execute(this.db_conn, {
         procedure: 'pr_Application_Delete',
+=======
+  // Node.js DB FOR SP pr_Adm_AttachmentsGet
+  //----------------------------------------------------------------------------------
+  async admAttachmentsGet({ applicationAA, formKey }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_Adm_AttachmentsGet',
+>>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
         params: {
           applicationAA: { type: sql.INT, val: applicationAA },
           formKey: { type: sql.NVARCHAR, val: formKey },
@@ -615,6 +831,7 @@ class DB {
   }
 
   //----------------------------------------------------------------------------------
+<<<<<<< HEAD
   // Node.js DB FOR SP pr_Citizen_MyApplications
   //----------------------------------------------------------------------------------
   async citizenMyApplications({ citizenAA }) {
@@ -623,6 +840,29 @@ class DB {
         procedure: 'pr_Citizen_MyApplications',
         params: {
           citizenAA: { type: sql.INT, val: citizenAA },
+=======
+  // Node.js DB FOR SP pr_Adm_AttachmentsInsert
+  //----------------------------------------------------------------------------------//----------------------------------------------------------------------------------
+  // Node.js DB FOR SP pr_Adm_AttachmentsInsert
+  //----------------------------------------------------------------------------------
+  async admAttachmentsInsert({
+    headerAA,
+    attachmentType,
+    attachmentFileName,
+    attachmentSize,
+    attachment,
+    formKey,
+  }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_Adm_AttachmentsInsert',
+        params: {
+          headerAA: { type: sql.INT, val: headerAA },
+          attachmentType: { type: sql.NVARCHAR, val: attachmentType },
+          attachmentFileName: { type: sql.NVARCHAR, val: attachmentFileName },
+          attachmentSize: { type: sql.INT, val: attachmentSize },
+          attachment: { type: sql.NVARCHAR, val: attachment },
+          formKey: { type: sql.NVARCHAR, val: formKey },
         },
       })
       return data[0][0]
@@ -633,12 +873,40 @@ class DB {
   }
 
   //----------------------------------------------------------------------------------
+  // Node.js DB FOR SP pr_Adm_Attachments_DeleteById
+  //----------------------------------------------------------------------------------
+  async admAttachmentsDeleteById({ AA }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_Adm_Attachments_DeleteById',
+        params: {
+          AA: { type: sql.INT, val: AA },
+>>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
+        },
+      })
+      return data[0][0]
+    } catch (error) {
+      global.logger.error(error)
+      throw error
+    }
+  }
+
+  //----------------------------------------------------------------------------------
+<<<<<<< HEAD
   // Node.js DB FOR SP pr_AttachmentsGetForDisplay
   //----------------------------------------------------------------------------------
   async attachmentsGetForDisplay({ AA }) {
     try {
       const data = await sql.execute(this.db_conn, {
         procedure: 'pr_AttachmentsGetForDisplay',
+=======
+  // Node.js DB FOR SP pr_Adm_AttachmentsGetForDisplay
+  //----------------------------------------------------------------------------------
+  async admAttachmentsGetForDisplay({ AA }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_Adm_AttachmentsGetForDisplay',
+>>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
         params: {
           AA: { type: sql.INT, val: AA },
         },
@@ -651,6 +919,7 @@ class DB {
   }
 
   //----------------------------------------------------------------------------------
+<<<<<<< HEAD
   // Node.js DB FOR SP pr_Attachments_DeleteById
   //----------------------------------------------------------------------------------
   async attachmentsDeleteById({ AA }) {
@@ -659,6 +928,18 @@ class DB {
         procedure: 'pr_Attachments_DeleteById',
         params: {
           AA: { type: sql.INT, val: AA },
+=======
+  // Node.js DB FOR SP pr_Adm_SubmitFormAnswer
+  //----------------------------------------------------------------------------------
+  async admSubmitFormAnswer({ applicationAA, formKey, userAA }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_Adm_SubmitFormAnswer',
+        params: {
+          applicationAA: { type: sql.INT, val: applicationAA },
+          formKey: { type: sql.NVARCHAR, val: formKey },
+          userAA: { type: sql.INT, val: userAA },
+>>>>>>> 946be05288b686e69043fc20d734dd1f0d4b7b28
         },
       })
       return data[0][0]
