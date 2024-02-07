@@ -31,7 +31,7 @@ var logger = {}
 //logging in global object
 const tsFormat = () => moment().format('YYYY-MM-DD hh:mm:ss:ms').trim()
 const myFormat = printf((info) => {
-	return `DEME ADMIN SERVER (API) [${tsFormat()} ${info.label}] ${info.level}: ${info.message}`
+	return `DEME SERVER (API) [${tsFormat()} ${info.label}] ${info.level}: ${info.message}`
 })
 const LogFile = process.cwd() + process.env.APPLICATION_LOGDIR + moment().format('-YYYY-MM-DD__hh.mm.ss__ms') + '.log'
 

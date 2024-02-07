@@ -15,7 +15,7 @@ class DB {
   //----------------------------------------------------------------------------------
   // Node.js DB FOR SP pr_GetAllFormsForCitizenAndDeme
   //----------------------------------------------------------------------------------
-  async getAllFormsForCitizenAndDeme({ citizenAA, demeAA }) {
+  async getAllFormsForCitizenAndDeme ({ citizenAA, demeAA }) {
     try {
       const data = await sql.execute(this.db_conn, {
         procedure: 'pr_GetAllFormsForCitizenAndDeme',
@@ -34,7 +34,7 @@ class DB {
   //----------------------------------------------------------------------------------
   // Node.js DB FOR SP pr_App03_GeneralApplication_Get
   //----------------------------------------------------------------------------------
-  async app03GeneralApplicationGet({ applicationAA }) {
+  async app03GeneralApplicationGet ({ applicationAA }) {
     try {
       const data = await sql.execute(this.db_conn, {
         procedure: 'pr_App03_GeneralApplication_Get',
@@ -52,7 +52,7 @@ class DB {
   //----------------------------------------------------------------------------------
   // Node.js DB FOR SP pr_App03_GeneralApplication_AttachmentsGet
   //----------------------------------------------------------------------------------
-  async app03GeneralApplicationAttachmentsGet({ applicationAA }) {
+  async app03GeneralApplicationAttachmentsGet ({ applicationAA }) {
     try {
       const data = await sql.execute(this.db_conn, {
         procedure: 'pr_App03_GeneralApplication_AttachmentsGet',
@@ -70,7 +70,7 @@ class DB {
   //----------------------------------------------------------------------------------
   // Node.js DB FOR SP pr_App03_GeneralApplication_AttachmentsInsert
   //----------------------------------------------------------------------------------
-  async app03GeneralApplicationAttachmentsInsert({
+  async app03GeneralApplicationAttachmentsInsert ({
     headerAA,
     attachmentType,
     attachmentFileName,
@@ -96,7 +96,7 @@ class DB {
   //----------------------------------------------------------------------------------
   // Node.js DB FOR SP pr_App03_GeneralApplication_Attachments_DeleteById
   //----------------------------------------------------------------------------------
-  async app03GeneralApplicationAttachmentsDeleteById({ AA }) {
+  async app03GeneralApplicationAttachmentsDeleteById ({ AA }) {
     try {
       const data = await sql.execute(this.db_conn, {
         procedure: 'pr_App03_GeneralApplication_Attachments_DeleteById',
@@ -114,7 +114,7 @@ class DB {
   //----------------------------------------------------------------------------------
   // Node.js DB FOR SP pr_App03_GeneralApplication_InsUpd
   //----------------------------------------------------------------------------------
-  async app03GeneralApplicationInsUpd({
+  async app03GeneralApplicationInsUpd ({
     applicationAA,
     demeAA,
     surname,
@@ -162,7 +162,7 @@ class DB {
   //----------------------------------------------------------------------------------
   // Node.js DB FOR SP pr_App03_GeneralApplication_Submit
   //----------------------------------------------------------------------------------
-  async app03GeneralApplicationSubmit({ applicationAA }) {
+  async app03GeneralApplicationSubmit ({ applicationAA }) {
     try {
       const data = await sql.execute(this.db_conn, {
         procedure: 'pr_App03_GeneralApplication_Submit',
@@ -180,7 +180,7 @@ class DB {
   //----------------------------------------------------------------------------------
   // Node.js DB FOR SP pr_App03_GeneralApplication_IsReadyForSubmission
   //----------------------------------------------------------------------------------
-  async app03GeneralApplicationIsReadyForSubmission({ applicationAA }) {
+  async app03GeneralApplicationIsReadyForSubmission ({ applicationAA }) {
     try {
       const data = await sql.execute(this.db_conn, {
         procedure: 'pr_App03_GeneralApplication_IsReadyForSubmission',
@@ -198,7 +198,7 @@ class DB {
   //----------------------------------------------------------------------------------
   // Node.js DB FOR SP pr_TaxAuthority
   //----------------------------------------------------------------------------------
-  async taxAuthority() {
+  async taxAuthority () {
     try {
       const data = await sql.execute(this.db_conn, {
         procedure: 'pr_TaxAuthority',
@@ -213,7 +213,7 @@ class DB {
   //----------------------------------------------------------------------------------
   // Node.js DB FOR SP pr_App03_GeneralApplication_Pdf
   //----------------------------------------------------------------------------------
-  async app03GeneralApplicationPdf({ applicationAA }) {
+  async app03GeneralApplicationPdf ({ applicationAA }) {
     try {
       const data = await sql.execute(this.db_conn, {
         procedure: 'pr_App03_GeneralApplication_Pdf',
@@ -231,7 +231,7 @@ class DB {
   //----------------------------------------------------------------------------------
   // Node.js DB FOR SP pr_App03_GeneralApplication_FormAttachmentInsUpd
   //----------------------------------------------------------------------------------
-  async app03GeneralApplicationFormAttachmentInsUpd({
+  async app03GeneralApplicationFormAttachmentInsUpd ({
     headerAA,
     attachmentType,
     attachmentFileName,
@@ -257,7 +257,7 @@ class DB {
   //----------------------------------------------------------------------------------
   // Node.js DB FOR SP pr_App03_GeneralApplication_IrisUploads_Ins
   //----------------------------------------------------------------------------------
-  async app03GeneralApplicationIrisUploadsIns({ applicationAA, irisId }) {
+  async app03GeneralApplicationIrisUploadsIns ({ applicationAA, irisId }) {
     try {
       const data = await sql.execute(this.db_conn, {
         procedure: 'pr_App03_GeneralApplication_IrisUploads_Ins',
@@ -275,7 +275,7 @@ class DB {
   //----------------------------------------------------------------------------------
   // Node.js DB FOR SP pr_App03_GeneralApplication_New
   //----------------------------------------------------------------------------------
-  async app03GeneralApplicationNew({ demeAA, surname, firstName, fatherName, vatNumber }) {
+  async app03GeneralApplicationNew ({ demeAA, surname, firstName, fatherName, vatNumber }) {
     try {
       const data = await sql.execute(this.db_conn, {
         procedure: 'pr_App03_GeneralApplication_New',
@@ -294,7 +294,7 @@ class DB {
     }
   }
 
-  async app03GeneralApplicationAttachmentsGetForIris({ applicationAA }) {
+  async app03GeneralApplicationAttachmentsGetForIris ({ applicationAA }) {
     try {
       const data = await sql.execute(this.db_conn, {
         procedure: 'pr_App03_GeneralApplication_AttachmentsGetForIris',
@@ -312,7 +312,7 @@ class DB {
   //----------------------------------------------------------------------------------
   // Node.js DB FOR SP pr_GetCitizenByVatNumber
   //----------------------------------------------------------------------------------
-  async getCitizenByVatNumber({ vatNumber }) {
+  async getCitizenByVatNumber ({ vatNumber }) {
     try {
       const data = await sql.execute(this.db_conn, {
         procedure: 'pr_GetCitizenByVatNumber',
@@ -329,7 +329,7 @@ class DB {
   //----------------------------------------------------------------------------------
   // Node.js DB FOR SP pr_GetFormData
   //----------------------------------------------------------------------------------
-  async getFormData() {
+  async getFormData () {
     try {
       const data = await sql.execute(this.db_conn, {
         procedure: 'pr_GetFormData',
@@ -344,7 +344,7 @@ class DB {
   //----------------------------------------------------------------------------------
   // Node.js DB FOR SP pr_Application_InsUpd
   //----------------------------------------------------------------------------------
-  async applicationInsUpd({
+  async applicationInsUpd ({
     applicationAA,
     demeAA,
     surname,
@@ -391,7 +391,7 @@ class DB {
 
   //GENERIC FORM SP
 
-  async applicationGet({ applicationAA, formKey }) {
+  async applicationGet ({ applicationAA, formKey }) {
     try {
       const data = await sql.execute(this.db_conn, {
         procedure: 'pr_Application_Get',
@@ -410,7 +410,7 @@ class DB {
   //----------------------------------------------------------------------------------
   // Node.js DB FOR SP pr_AttachmentsGet
   //----------------------------------------------------------------------------------
-  async attachmentsGet({ applicationAA, formKey }) {
+  async attachmentsGet ({ applicationAA, formKey }) {
     try {
       const data = await sql.execute(this.db_conn, {
         procedure: 'pr_AttachmentsGet',
@@ -429,7 +429,7 @@ class DB {
   //----------------------------------------------------------------------------------
   // Node.js DB FOR SP pr_AttachmentsGetForIris
   //----------------------------------------------------------------------------------
-  async attachmentsGetForIris({ applicationAA, formKey }) {
+  async attachmentsGetForIris ({ applicationAA, formKey }) {
     try {
       const data = await sql.execute(this.db_conn, {
         procedure: 'pr_AttachmentsGetForIris',
@@ -448,7 +448,7 @@ class DB {
   //----------------------------------------------------------------------------------
   // Node.js DB FOR SP pr_AttachmentsInsert
   //----------------------------------------------------------------------------------
-  async attachmentsInsert({ headerAA, attachmentType, attachmentFileName, attachment, formKey }) {
+  async attachmentsInsert ({ headerAA, attachmentType, attachmentFileName, attachment, formKey }) {
     try {
       const data = await sql.execute(this.db_conn, {
         procedure: 'pr_AttachmentsInsert',
@@ -470,7 +470,7 @@ class DB {
   //----------------------------------------------------------------------------------
   // Node.js DB FOR SP pr_Form_IsReadyForSubmission
   //----------------------------------------------------------------------------------
-  async formIsReadyForSubmission({ applicationAA, formKey }) {
+  async formIsReadyForSubmission ({ applicationAA, formKey }) {
     try {
       const data = await sql.execute(this.db_conn, {
         procedure: 'pr_Form_IsReadyForSubmission',
@@ -479,7 +479,7 @@ class DB {
           formKey: { type: sql.NVARCHAR, val: formKey },
         },
       })
-      return data[0][0]
+      return data[0][0][0]
     } catch (error) {
       global.logger.error(error)
       throw error
@@ -489,7 +489,7 @@ class DB {
   //----------------------------------------------------------------------------------
   // Node.js DB FOR SP pr_Form_New
   //----------------------------------------------------------------------------------
-  async formNew({ demeAA, surname, firstName, fatherName, vatNumber, formKey }) {
+  async formNew ({ demeAA, surname, firstName, fatherName, vatNumber, formKey }) {
     try {
       const data = await sql.execute(this.db_conn, {
         procedure: 'pr_Form_New',
@@ -512,7 +512,7 @@ class DB {
   //----------------------------------------------------------------------------------
   // Node.js DB FOR SP pr_Form_Pdf
   //----------------------------------------------------------------------------------
-  async formPdf({ applicationAA, formKey }) {
+  async formPdf ({ applicationAA, formKey }) {
     try {
       const data = await sql.execute(this.db_conn, {
         procedure: 'pr_Form_Pdf',
@@ -521,7 +521,7 @@ class DB {
           formKey: { type: sql.NVARCHAR, val: formKey },
         },
       })
-      return data[0][0]
+      return data[0]
     } catch (error) {
       global.logger.error(error)
       throw error
@@ -531,7 +531,7 @@ class DB {
   //----------------------------------------------------------------------------------
   // Node.js DB FOR SP pr_Form_Submit
   //----------------------------------------------------------------------------------
-  async formSubmit({ applicationAA, formKey }) {
+  async formSubmit ({ applicationAA, formKey }) {
     try {
       const data = await sql.execute(this.db_conn, {
         procedure: 'pr_Form_Submit',
@@ -550,7 +550,7 @@ class DB {
   //----------------------------------------------------------------------------------
   // Node.js DB FOR SP pr_FormAttachmentInsUpd
   //----------------------------------------------------------------------------------
-  async formAttachmentInsUpd({
+  async formAttachmentInsUpd ({
     headerAA,
     attachmentType,
     attachmentFileName,
@@ -578,7 +578,7 @@ class DB {
   //----------------------------------------------------------------------------------
   // Node.js DB FOR SP pr_IrisUploads_Ins
   //----------------------------------------------------------------------------------
-  async irisUploadsIns({ applicationAA, irisId, formKey }) {
+  async irisUploadsIns ({ applicationAA, irisId, formKey }) {
     try {
       const data = await sql.execute(this.db_conn, {
         procedure: 'pr_IrisUploads_Ins',
@@ -598,7 +598,7 @@ class DB {
   //----------------------------------------------------------------------------------
   // Node.js DB FOR SP pr_Application_Delete
   //----------------------------------------------------------------------------------
-  async applicationDelete({ applicationAA, formKey }) {
+  async applicationDelete ({ applicationAA, formKey }) {
     try {
       const data = await sql.execute(this.db_conn, {
         procedure: 'pr_Application_Delete',
@@ -617,15 +617,16 @@ class DB {
   //----------------------------------------------------------------------------------
   // Node.js DB FOR SP pr_Citizen_MyApplications
   //----------------------------------------------------------------------------------
-  async citizenMyApplications({ citizenAA }) {
+  async citizenMyApplications ({ citizenAA, demeAA }) {
     try {
       const data = await sql.execute(this.db_conn, {
         procedure: 'pr_Citizen_MyApplications',
         params: {
           citizenAA: { type: sql.INT, val: citizenAA },
+          demeAA: { type: sql.INT, val: demeAA },
         },
       })
-      return data[0][0]
+      return data[0]
     } catch (error) {
       global.logger.error(error)
       throw error
@@ -635,7 +636,7 @@ class DB {
   //----------------------------------------------------------------------------------
   // Node.js DB FOR SP pr_AttachmentsGetForDisplay
   //----------------------------------------------------------------------------------
-  async attachmentsGetForDisplay({ AA }) {
+  async attachmentsGetForDisplay ({ AA }) {
     try {
       const data = await sql.execute(this.db_conn, {
         procedure: 'pr_AttachmentsGetForDisplay',
@@ -653,7 +654,7 @@ class DB {
   //----------------------------------------------------------------------------------
   // Node.js DB FOR SP pr_Attachments_DeleteById
   //----------------------------------------------------------------------------------
-  async attachmentsDeleteById({ AA }) {
+  async attachmentsDeleteById ({ AA }) {
     try {
       const data = await sql.execute(this.db_conn, {
         procedure: 'pr_Attachments_DeleteById',
@@ -666,6 +667,27 @@ class DB {
       global.logger.error(error)
       throw error
     }
+  }
+
+  //----------------------------------------------------------------------------------
+  // Node.js DB FOR SP pr_Form_SubmissionData
+  //----------------------------------------------------------------------------------
+  async formSubmissionData ({ applicationAA, formKey }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: "pr_Form_SubmissionData",
+        params: {
+          applicationAA: { type: sql.INT, val: applicationAA },
+          formKey: { type: sql.NVARCHAR, val: formKey },
+
+        },
+      })
+      return data[0][0][0]
+    } catch (error) {
+      global.logger.error(error)
+      throw error
+    }
+
   }
 }
 
