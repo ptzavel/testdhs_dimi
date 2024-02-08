@@ -23,6 +23,44 @@
     }
   },
   "paths": {
+    "/TestLogin": {
+      "post": {
+        "tags": [
+          "DEME_CLIENT"
+        ],
+        "summary": "Εισαγωγη συνημμενου για φορμα Γενική Αίτηση",
+        "description": "",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "Λεπτομέρειες Συνημμενου.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "citizenAA": {
+                  "type": "string",
+                  "example": "1"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
     "/test": {
       "get": {
         "tags": [
@@ -750,57 +788,6 @@
         ]
       }
     },
-    "/app03GeneralApplicationSubmit": {
-      "post": {
-        "tags": [
-          "DEME_CLIENT"
-        ],
-        "summary": "Υποβολή φορμας Γενική Αίτηση",
-        "description": "",
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          },
-          {
-            "name": "obj",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "applicationAA": {
-                  "type": "string",
-                  "example": "1"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        },
-        "security": [
-          {
-            "Bearer": []
-          }
-        ]
-      }
-    },
     "/applicationGet": {
       "get": {
         "tags": [
@@ -1103,61 +1090,6 @@
         ]
       }
     },
-    "/formSubmit": {
-      "post": {
-        "tags": [
-          "DEME_CLIENT_ALL"
-        ],
-        "summary": "Υποβολή φορμας ",
-        "description": "",
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          },
-          {
-            "name": "obj",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "applicationAA": {
-                  "type": "string",
-                  "example": "1"
-                },
-                "formKey": {
-                  "type": "string",
-                  "example": "RelocationDueToTwoYearRes"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        },
-        "security": [
-          {
-            "Bearer": []
-          }
-        ]
-      }
-    },
     "/applicationDelete": {
       "post": {
         "tags": [
@@ -1187,52 +1119,6 @@
                 }
               }
             }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        },
-        "security": [
-          {
-            "Bearer": []
-          }
-        ]
-      }
-    },
-    "/citizenMyApplications": {
-      "get": {
-        "tags": [
-          "DEME_CLIENT_ALL"
-        ],
-        "summary": "Οι φορμες μου (πρωτη σελιδα)",
-        "description": "",
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          },
-          {
-            "name": "citizenAA",
-            "in": "query",
-            "description": "Το id του πολιτη.",
-            "required": true,
-            "type": "integer",
-            "example": "1"
           }
         ],
         "responses": {
@@ -1349,6 +1235,195 @@
             "Bearer": []
           }
         ]
+      }
+    },
+    "/citizenMyApplications": {
+      "get": {
+        "tags": [
+          "DEME_CLIENT_ALL"
+        ],
+        "summary": "Φερνει 1 attachment στιε φορμς πολιτη σε μορφη base 64 encoded PDF",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "citizenAA",
+            "in": "query",
+            "description": "Το AA του πολιτη.",
+            "required": true,
+            "type": "integer",
+            "example": "1"
+          },
+          {
+            "name": "demeAA",
+            "in": "query",
+            "description": "Το AA του Δημου.",
+            "required": true,
+            "type": "integer",
+            "example": "1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/app03GeneralApplicationSubmit": {
+      "post": {
+        "tags": [
+          "DEME_CLIENT"
+        ],
+        "summary": "Υποβολή φορμας Γενική Αίτηση",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "applicationAA": {
+                  "type": "string",
+                  "example": "1"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/formSubmit": {
+      "post": {
+        "tags": [
+          "DEME_CLIENT_ALL"
+        ],
+        "summary": "Υποβολή φορμας ",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "applicationAA": {
+                  "type": "string",
+                  "example": "1"
+                },
+                "formKey": {
+                  "type": "string",
+                  "example": "RelocationDueToTwoYearRes"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/demeAnswerAttachmentsGet": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
       }
     }
   }

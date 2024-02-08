@@ -387,6 +387,7 @@ server.init = function (logger) {
         console.error('Error:', error)
         res.render('index', { code: code })
       })
+
   })
 
   server.app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }))

@@ -88,6 +88,47 @@ function authenticateToken(req, res, next) {
   })
 }
 
+appRoutes.post('/TestLogin', async (req, res, next) => {
+  /*
+    #/api/TestLogin
+    #swagger.tags = ['DEME_CLIENT']
+    #swagger.summary = 'Εισαγωγη συνημμενου για φορμα Γενική Αίτηση'
+    #swagger.security = [{"Bearer": []}]
+    #swagger.parameters['obj'] = {
+      in: 'body',
+      description: 'Λεπτομέρειες Συνημμενου.',
+      schema: {
+        citizenAA: '1',
+      }
+    }
+*/
+
+  console.log(formatDateTime(new Date()), ': /TestLogin', 'citizenAA =', req.body?.citizenAA)
+  try {
+    const citizenAA = req.body?.citizenAA || null
+
+    let user = {
+      userid: 'User660074100   ',
+      taxid: '660074100   ',
+      lastname: 'ΧΑΛΚΕΟΝΙΔΗΣ ΠΑΠΑΔΟΠΟΥΛΟΣ',
+      firstname: 'ΕΥΣΤΡΑΤΙΟΣ',
+      fathername: 'ΠΑΤΡΟΚΛΟΣ',
+      mothername: 'ΜΥΡΣΙΝΗ',
+      birthyear: '1970',
+    }
+
+    console.log('user', user)
+    const jwtAccesstoken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+      expiresIn: 6000,
+    })
+
+    return res.status(200).json({ accessToken: jwtAccesstoken })
+  } catch (err) {
+    global.logger.error(err)
+    return res.status(500).json({ success: false, reason: 'Internal Error' })
+  }
+})
+
 //***************************************************************************
 // uploadDocumentToIris
 //***************************************************************************
@@ -1723,7 +1764,6 @@ appRoutes.post('/formSubmit', authenticateToken, async (req, res, next) => {
       return res.status(200).json(formSubmitData)
     }
 
-
     const formSubmissionDataRec = await db.formSubmissionData({
       applicationAA,
       formKey,
@@ -1802,11 +1842,51 @@ appRoutes.post('/formSubmit', authenticateToken, async (req, res, next) => {
       formKey,
     })
 
-
     return res.status(200).json(formSubmitData)
+  } catch (err) {
+    global.logger.error(err)
+    //in case of error try to rollback form submision
+
+    return res.status(500).json({ success: false, reason: 'Internal Error' })
+  }
+})
+
+//----------------------------------------------------------------------------------
+// Node.js GET Routes FOR SP pr_DemeAnswerAttachmentsGet
+//----------------------------------------------------------------------------------
+appRoutes.get('/demeAnswerAttachmentsGet', authenticateToken, async (req, res, next) => {
+  console.log(
+    formatDateTime(new Date()),
+    ': /demeAnswerAttachmentsGet',
+    'applicationAA=',
+    req.query?.applicationAA,
+    'formKey=',
+    req.query?.formKey
+  )
+  try {
+    const applicationAA = req.query?.applicationAA || 0
+    const formKey = req.query?.formKey || null
+    if (!applicationAA) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, applicationAA must have a value.' })
+    }
+    if (!formKey) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, formKey must have a value.' })
+    }
+
+    const demeAnswerAttachmentsGetData = await db.demeAnswerAttachmentsGet({
+      applicationAA,
+      formKey,
+    })
+
+    return res.status(200).json(demeAnswerAttachmentsGetData)
   } catch (err) {
     global.logger.error(err)
     return res.status(500).json({ success: false, reason: 'Internal Error' })
   }
 })
+
 module.exports = appRoutes
