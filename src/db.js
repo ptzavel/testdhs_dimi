@@ -706,6 +706,144 @@ class DB {
       throw error
     }
   }
+
+  //----------------------------------------------------------------------------------
+  // Node.js DB FOR SP pr_Children_Insert
+  //----------------------------------------------------------------------------------
+  async childrenInsert({ applicationAA, formKey, onomo, birthPlace, dob }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_Children_Insert',
+        params: {
+          applicationAA: { type: sql.INT, val: applicationAA },
+          formKey: { type: sql.NVARCHAR, val: formKey },
+          onomo: { type: sql.NVARCHAR, val: onomo },
+          birthPlace: { type: sql.NVARCHAR, val: birthPlace },
+          dob: { type: sql.DATE, val: dob },
+        },
+      })
+      return data[0][0]
+    } catch (error) {
+      global.logger.error(error)
+      throw error
+    }
+  }
+
+  //----------------------------------------------------------------------------------
+  // Node.js DB FOR SP pr_Children_GetForApplication
+  //----------------------------------------------------------------------------------
+  async childrenGetForApplication({ applicationAA, formKey }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_Children_GetForApplication',
+        params: {
+          applicationAA: { type: sql.INT, val: applicationAA },
+          formKey: { type: sql.NVARCHAR, val: formKey },
+        },
+      })
+      console.log('childrenGetForApplication, data[0][0]=', data[0][0])
+      return data[0][0]
+    } catch (error) {
+      global.logger.error(error)
+      throw error
+    }
+  }
+
+  //----------------------------------------------------------------------------------
+  // Node.js DB FOR SP pr_Children_DeleteById
+  //----------------------------------------------------------------------------------
+  async childrenDeleteById({ AA }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_Children_DeleteById',
+        params: {
+          AA: { type: sql.INT, val: AA },
+        },
+      })
+      return data[0][0]
+    } catch (error) {
+      global.logger.error(error)
+      throw error
+    }
+  }
+
+  //----------------------------------------------------------------------------------
+  // Node.js DB FOR SP pr_Children_Update
+  //----------------------------------------------------------------------------------
+  async childrenUpdate({ AA, onomo, birthPlace, dob }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_Children_Update',
+        params: {
+          AA: { type: sql.INT, val: AA },
+          onomo: { type: sql.NVARCHAR, val: onomo },
+          birthPlace: { type: sql.NVARCHAR, val: birthPlace },
+          dob: { type: sql.DATE, val: dob },
+        },
+      })
+      return data[0][0]
+    } catch (error) {
+      global.logger.error(error)
+      throw error
+    }
+  }
+
+  //----------------------------------------------------------------------------------
+  // Node.js DB FOR SP pr_formSubmitRollback
+  //----------------------------------------------------------------------------------
+  async formSubmitRollback({ applicationAA, formKey }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_formSubmitRollback',
+        params: {
+          applicationAA: { type: sql.INT, val: applicationAA },
+          formKey: { type: sql.NVARCHAR, val: formKey },
+        },
+      })
+      return data[0][0]
+    } catch (error) {
+      global.logger.error(error)
+      throw error
+    }
+  }
+
+  //----------------------------------------------------------------------------------
+  // Node.js DB FOR SP pr_Children_GetLast
+  //----------------------------------------------------------------------------------
+  async childrenGetLast({ vatNumber }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_Children_GetLast',
+        params: {
+          vatNumber: { type: sql.NVARCHAR, val: vatNumber },
+        },
+      })
+      return data[0][0]
+    } catch (error) {
+      global.logger.error(error)
+      throw error
+    }
+  }
+
+  //----------------------------------------------------------------------------------
+  // Node.js DB FOR SP pr_Children_MassInsert
+  //----------------------------------------------------------------------------------
+  async childrenMassInsert({ applicationAA, formKey, rows }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_Children_MassInsert',
+        params: {
+          applicationAA: { type: sql.INT, val: applicationAA },
+          formKey: { type: sql.NVARCHAR, val: formKey },
+          rows: { type: sql.NVARCHAR, val: rows },
+        },
+      })
+      return data[0][0]
+    } catch (error) {
+      global.logger.error(error)
+      throw error
+    }
+  }
 }
 
 

@@ -6,7 +6,8 @@
 .pnp.js
 *.zip
 *.7z
-
+*.pdf
+*.doc
 # testing
 /coverage
 

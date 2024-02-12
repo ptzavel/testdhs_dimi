@@ -100,6 +100,17 @@ server.init = function (logger) {
       })
   })
 
+  server.app.get('/download-doc', (req, res) => {
+    const docPath = path.join(__dirname, 'public', 'aitisi_kye_1.doc')
+    console.log('docPath=', docPath)
+    res.download(docPath, 'aitisi_kye_1.doc', function (err) {
+      if (err) {
+        // if the file download fails, we throw an error
+        throw err
+      }
+    })
+  })
+
   //********************************************************* */
   //GET DOCUMENT FILES FROM IRIS
   //********************************************************* */
@@ -387,13 +398,13 @@ server.init = function (logger) {
         console.error('Error:', error)
         res.render('index', { code: code })
       })
-
   })
 
   server.app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }))
 
   server.app.use(bodyParser.json())
   server.app.use(express.static(root))
+
   server.app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
   server.app.use('/api', appRoutes)
   server.app.use(fallback('index.html', { root: root }))

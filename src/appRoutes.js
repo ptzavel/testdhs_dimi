@@ -108,8 +108,8 @@ appRoutes.post('/TestLogin', async (req, res, next) => {
     const citizenAA = req.body?.citizenAA || null
 
     let user = {
-      userid: 'User660074100   ',
-      taxid: '660074100   ',
+      userid: 'User660074100',
+      taxid: '660074100',
       lastname: 'ΧΑΛΚΕΟΝΙΔΗΣ ΠΑΠΑΔΟΠΟΥΛΟΣ',
       firstname: 'ΕΥΣΤΡΑΤΙΟΣ',
       fathername: 'ΠΑΤΡΟΚΛΟΣ',
@@ -328,6 +328,7 @@ appRoutes.get('/getAllFormsForCitizenAndDeme', authenticateToken, async (req, re
     'demeAA=',
     req.query?.demeAA
   )
+
   try {
     const citizenAA = req.query?.citizenAA || 0
     const demeAA = req.query?.demeAA || 0
@@ -1213,7 +1214,7 @@ appRoutes.post('/attachmentsInsert', authenticateToken, async (req, res, next) =
     'attachmentFileName =',
     req.body?.attachmentFileName,
     'attachment =',
-    req.body?.attachment,
+    '<big data>',
     'formKey =',
     req.body?.formKey
   )
@@ -1734,9 +1735,11 @@ appRoutes.post('/formSubmit', authenticateToken, async (req, res, next) => {
     'formKey =',
     req.body?.formKey
   )
+  let applicationAA = null
+  let formKey = null
   try {
-    const applicationAA = req.body?.applicationAA || null
-    const formKey = req.body?.formKey || null
+    applicationAA = req.body?.applicationAA || null
+    formKey = req.body?.formKey || null
     if (!applicationAA) {
       return res
         .status(400)
@@ -1846,6 +1849,7 @@ appRoutes.post('/formSubmit', authenticateToken, async (req, res, next) => {
   } catch (err) {
     global.logger.error(err)
     //in case of error try to rollback form submision
+    await db.formSubmitRollback({ applicationAA, formKey })
 
     return res.status(500).json({ success: false, reason: 'Internal Error' })
   }
@@ -1883,6 +1887,341 @@ appRoutes.get('/demeAnswerAttachmentsGet', authenticateToken, async (req, res, n
     })
 
     return res.status(200).json(demeAnswerAttachmentsGetData)
+  } catch (err) {
+    global.logger.error(err)
+    return res.status(500).json({ success: false, reason: 'Internal Error' })
+  }
+})
+
+//----------------------------------------------------------------------------------
+// Node.js POST Routes FOR SP pr_Children_Insert
+//----------------------------------------------------------------------------------
+appRoutes.post('/childrenInsert', authenticateToken, async (req, res, next) => {
+  /*
+    #/api/childrenInsert
+    #swagger.tags = ['DEME_CLIENT_CHILDREN']
+    #swagger.summary = 'Εισαγωγή Τέκνου '
+    #swagger.security = [{"Bearer": []}]
+    #swagger.parameters['obj'] = {
+      in: 'body',
+      schema: {
+      applicationAA: '1',
+      formKey: 'RelocationDueToTwoYearRes',
+      onomo: 'Τεστοπουλου Τεστοκόρη',
+      birthPlace: 'Ανω Κοκορούσιανη',
+      dob: '2020-01-01'
+      }
+    }
+*/
+  console.log(
+    formatDateTime(new Date()),
+    ': /childrenInsert',
+    'applicationAA =',
+    req.body?.applicationAA,
+    'formKey =',
+    req.body?.formKey,
+    'onomo =',
+    req.body?.onomo,
+    'birthPlace =',
+    req.body?.birthPlace,
+    'dob =',
+    req.body?.dob
+  )
+  try {
+    const applicationAA = req.body?.applicationAA || null
+    const formKey = req.body?.formKey || null
+    const onomo = req.body?.onomo || null
+    const birthPlace = req.body?.birthPlace || null
+    const dob = req.body?.dob || null
+    if (!applicationAA) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, applicationAA must have a value.' })
+    }
+    if (!formKey) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, formKey must have a value.' })
+    }
+    if (!onomo) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, onomo must have a value.' })
+    }
+    if (!birthPlace) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, birthPlace must have a value.' })
+    }
+    if (!dob) {
+      return res.status(400).json({ success: false, reason: 'Bad Request, dob must have a value.' })
+    }
+
+    const childrenInsertData = await db.childrenInsert({
+      applicationAA,
+      formKey,
+      onomo,
+      birthPlace,
+      dob,
+    })
+
+    return res.status(200).json(childrenInsertData)
+  } catch (err) {
+    global.logger.error(err)
+    return res.status(500).json({ success: false, reason: 'Internal Error' })
+  }
+})
+
+//----------------------------------------------------------------------------------
+// Node.js POST Routes FOR SP pr_Children_DeleteById
+//----------------------------------------------------------------------------------
+appRoutes.post('/childrenDeleteById', authenticateToken, async (req, res, next) => {
+  /*
+    #/api/childrenDeleteById
+    #swagger.tags = ['DEME_CLIENT_CHILDREN']
+    #swagger.summary = 'Διαγραφή Τέκνου με βαση το Α/Α τεκνου '
+    #swagger.security = [{"Bearer": []}]
+    #swagger.parameters['obj'] = {
+      in: 'body',
+      schema: {
+      AA: '1',
+
+      }
+    }
+*/
+  console.log(formatDateTime(new Date()), ': /childrenDeleteById', 'AA =', req.body?.AA)
+  try {
+    const AA = req.body?.AA || null
+    if (!AA) {
+      return res.status(400).json({ success: false, reason: 'Bad Request, AA must have a value.' })
+    }
+
+    const childrenDeleteByIdData = await db.childrenDeleteById({ AA })
+
+    return res.status(200).json(childrenDeleteByIdData)
+  } catch (err) {
+    global.logger.error(err)
+    return res.status(500).json({ success: false, reason: 'Internal Error' })
+  }
+})
+
+//----------------------------------------------------------------------------------
+// Node.js POST Routes FOR SP pr_Children_Update
+//----------------------------------------------------------------------------------
+appRoutes.post('/childrenUpdate', authenticateToken, async (req, res, next) => {
+  /*
+    #/api/childrenUpdate
+    #swagger.tags = ['DEME_CLIENT_CHILDREN']
+    #swagger.summary = 'Ενημερωση στοιχειων Τέκνου '
+    #swagger.security = [{"Bearer": []}]
+    #swagger.parameters['obj'] = {
+      in: 'body',
+      schema: {
+      AA: '1',
+      onomo: 'Τεστοπουλου Τεστοκόρη',
+      birthPlace: 'Ανω Κοκορούσιανη',
+      dob: '2020-01-01'
+      }
+    }
+*/
+  console.log(
+    formatDateTime(new Date()),
+    ': /childrenUpdate',
+    'AA =',
+    req.body?.AA,
+    'onomo =',
+    req.body?.onomo,
+    'birthPlace =',
+    req.body?.birthPlace,
+    'dob =',
+    req.body?.dob
+  )
+  try {
+    const AA = req.body?.AA || null
+    const onomo = req.body?.onomo || null
+    const birthPlace = req.body?.birthPlace || null
+    const dob = req.body?.dob || null
+    if (!AA) {
+      return res.status(400).json({ success: false, reason: 'Bad Request, AA must have a value.' })
+    }
+    if (!onomo) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, onomo must have a value.' })
+    }
+    if (!birthPlace) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, birthPlace must have a value.' })
+    }
+    if (!dob) {
+      return res.status(400).json({ success: false, reason: 'Bad Request, dob must have a value.' })
+    }
+
+    const childrenUpdateData = await db.childrenUpdate({ AA, onomo, birthPlace, dob })
+
+    return res.status(200).json(childrenUpdateData)
+  } catch (err) {
+    global.logger.error(err)
+    return res.status(500).json({ success: false, reason: 'Internal Error' })
+  }
+})
+//----------------------------------------------------------------------------------
+// Node.js GET Routes FOR SP pr_Children_GetForApplication
+//----------------------------------------------------------------------------------
+appRoutes.get('/childrenGetForApplication', authenticateToken, async (req, res, next) => {
+  /*
+    #/api/childrenGetForApplication
+    #swagger.tags = ['DEME_CLIENT_CHILDREN']
+    #swagger.summary = 'Επιστρέφει τα παιδια που καταχωρηθηκαν σε μια αιτηση .'
+    #swagger.security = [{"Bearer": []}]
+    #swagger.parameters['applicationAA'] = {
+        in: 'query',
+        description: 'Το Α/Α της αίτησης.',
+        required: true,
+        type: 'integer',
+        example: '1'
+      },
+    #swagger.parameters['formKey'] = {
+        in: 'query',
+        description: 'Το κλειδι της φορμας.',
+        required: true,
+        type: 'string',
+        example: '1'
+      },
+
+    }
+  */
+  console.log(
+    formatDateTime(new Date()),
+    ': /childrenGetForApplication',
+    'applicationAA=',
+    req.query?.applicationAA,
+    'formKey=',
+    req.query?.formKey
+  )
+  try {
+    const applicationAA = req.query?.applicationAA || 0
+    const formKey = req.query?.formKey || null
+    if (!applicationAA) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, applicationAA must have a value.' })
+    }
+    if (!formKey) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, formKey must have a value.' })
+    }
+
+    const childrenGetForApplicationData = await db.childrenGetForApplication({
+      applicationAA,
+      formKey,
+    })
+console.log('childrenGetForApplicationData=', childrenGetForApplicationData)
+    return res.status(200).json(childrenGetForApplicationData)
+  } catch (err) {
+    global.logger.error(err)
+    return res.status(500).json({ success: false, reason: 'Internal Error' })
+  }
+})
+
+//----------------------------------------------------------------------------------
+// Node.js GET Routes FOR SP pr_Children_GetLast
+//----------------------------------------------------------------------------------
+appRoutes.get('/childrenGetLast', authenticateToken, async (req, res, next) => {
+  /*
+    #/api/childrenGetLast
+    #swagger.tags = ['DEME_CLIENT_CHILDREN']
+    #swagger.summary = 'Επιστρέφει Τα τελευται περασμενα παιδι για νεα φορμα .'
+    #swagger.security = [{"Bearer": []}]
+  */
+  console.log(formatDateTime(new Date()), ': /childrenGetLast')
+  try {
+    console.log('user:', req.user)
+    let user = req.user
+
+    let vatNumber = user.taxid
+    vatNumber = vatNumber.trim()
+
+    if (!vatNumber) {
+      return res.status(400).json({ success: false, reason: 'VAT Number not found.' })
+    }
+
+    const childrenGetLastData = await db.childrenGetLast({ vatNumber })
+
+    return res.status(200).json(childrenGetLastData)
+  } catch (err) {
+    global.logger.error(err)
+    return res.status(500).json({ success: false, reason: 'Internal Error' })
+  }
+})
+
+//----------------------------------------------------------------------------------
+// Node.js POST Routes FOR SP pr_Children_MassInsert
+//----------------------------------------------------------------------------------
+appRoutes.post('/childrenMassInsert', authenticateToken, async (req, res, next) => {
+  /*
+    #/api/childrenMassInsert
+    #swagger.tags = ['DEME_CLIENT_CHILDREN']
+    #swagger.summary = 'Μαζικη εισσαγωγή στοιχειων Τέκνου '
+    #swagger.security = [{"Bearer": []}]
+    #swagger.parameters['obj'] = {
+      in: 'body',
+      schema: {
+      applicationAA: '1',
+      formKey:'RelocationDueToTwoYearRes',
+      rows:[{onomo: 'Τεστοπουλου Τεστοκόρη',birthPlace: 'Ανω Κοκορούσιανη',dob: '2020-01-01'}]
+      }
+    }
+*/
+  console.log(
+    formatDateTime(new Date()),
+    ': /childrenMassInsert',
+    'applicationAA =',
+    req.body?.applicationAA,
+    'formKey =',
+    req.body?.formKey,
+    'rows =',
+    req.body?.rows
+  )
+  try {
+    const applicationAA = req.body?.applicationAA || null
+    const formKey = req.body?.formKey || null
+    const rows = req.body?.rows || []
+    if (!applicationAA) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, applicationAA must have a value.' })
+    }
+    if (!formKey) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, formKey must have a value.' })
+    }
+
+
+    let childrenRows = ''
+    const arr = req.body?.rows
+    //onomo, birthPlace, dob
+
+
+    if (rows && rows.length > 0) {
+      childrenRows = '<ROOT> '
+      for (let i = 0; i < arr.length; i++) {
+        childrenRows += `<ROW onomo="${arr[i].onomo}" birthPlace="${arr[i].birthPlace}"  dob="${arr[i].dob}"/>`
+      }
+      childrenRows += '</ROOT>'
+    }
+    console.log('childrenRows=', childrenRows)
+
+    const childrenMassInsertData = await db.childrenMassInsert({
+      applicationAA,
+      formKey,
+      rows: childrenRows,
+    })
+
+    return res.status(200).json(childrenMassInsertData)
   } catch (err) {
     global.logger.error(err)
     return res.status(500).json({ success: false, reason: 'Internal Error' })

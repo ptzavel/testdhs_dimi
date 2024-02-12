@@ -67,6 +67,7 @@ const doReport = async (OUT_PATH, fileName, reportData, vatNumber, callback) => 
   let header = reportData[1]
   let citizen = reportData[2]
   let form = reportData[3]
+  let kids = reportData[4]
 
   let docDefinition = null
 
@@ -96,7 +97,13 @@ const doReport = async (OUT_PATH, fileName, reportData, vatNumber, callback) => 
   docDefinition.content.push(...horizontalLine())
   docDefinition.content.push(...showCitizen(citizen))
   docDefinition.content.push(...horizontalLine())
-  docDefinition.content.push(...showForm(form))
+  if (kids?.length > 0) {
+    docDefinition.content.push(...showKids(kids))
+    docDefinition.content.push(...horizontalLine())
+  }
+  if (form?.length > 0) {
+    docDefinition.content.push(...showForm(form))
+  }
 
   const printer = new PdfPrinter(fonts)
   const pdfDoc = printer.createPdfKitDocument(docDefinition)
@@ -237,7 +244,7 @@ const showForm = (form) => {
           text: form[i]?.title + (form[i]?.title ? ':  ' : ''),
           style: 'contentBold',
           color: colors.TEXT,
-        }
+        },
       ],
     })
 
@@ -252,7 +259,6 @@ const showForm = (form) => {
       ],
     })
 
-
     i = i + 1
     if (i >= form.length) {
       ok = false
@@ -261,6 +267,57 @@ const showForm = (form) => {
 
   return out
 }
+
+const showKids = (kids) => {
+  let out = []
+
+  let ok = true
+  let i = 0
+
+    out.push({
+      alignment: 'left',
+      columns: [
+        {
+          text: 'Ανήλικα Τέκνα',
+          style: 'contentBold',
+          color: colors.TEXT,
+        },
+      ],
+    })
+
+
+  while (ok) {
+    // out.push({
+    //   alignment: 'left',
+    //   columns: [
+    //     {
+    //       text: kids[i]?.title + (kids[i]?.title ? ':  ' : ''),
+    //       style: 'contentBold',
+    //       color: colors.TEXT,
+    //     },
+    //   ],
+    // })
+
+    out.push({
+      alignment: 'left',
+      columns: [
+        {
+          text: kids[i]?.contents,
+          style: 'content',
+          color: colors.TEXT,
+        },
+      ],
+    })
+
+    i = i + 1
+    if (i >= kids.length) {
+      ok = false
+    }
+  }
+
+  return out
+}
+
 
 const savePdfToDisk = async (docDefinition) => {
   const printer = new PdfPrinter(fonts)

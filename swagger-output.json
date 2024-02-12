@@ -1425,6 +1425,354 @@
           }
         }
       }
+    },
+    "/childrenInsert": {
+      "post": {
+        "tags": [
+          "DEME_CLIENT_CHILDREN"
+        ],
+        "summary": "Εισαγωγή Τέκνου ",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "applicationAA": {
+                  "type": "string",
+                  "example": "1"
+                },
+                "formKey": {
+                  "type": "string",
+                  "example": "RelocationDueToTwoYearRes"
+                },
+                "onomo": {
+                  "type": "string",
+                  "example": "Τεστοπουλου Τεστοκόρη"
+                },
+                "birthPlace": {
+                  "type": "string",
+                  "example": "Ανω Κοκορούσιανη"
+                },
+                "dob": {
+                  "type": "string",
+                  "example": "2020-01-01"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/childrenDeleteById": {
+      "post": {
+        "tags": [
+          "DEME_CLIENT_CHILDREN"
+        ],
+        "summary": "Διαγραφή Τέκνου με βαση το Α/Α τεκνου ",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "AA": {
+                  "type": "string",
+                  "example": "1"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/childrenUpdate": {
+      "post": {
+        "tags": [
+          "DEME_CLIENT_CHILDREN"
+        ],
+        "summary": "Ενημερωση στοιχειων Τέκνου ",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "AA": {
+                  "type": "string",
+                  "example": "1"
+                },
+                "onomo": {
+                  "type": "string",
+                  "example": "Τεστοπουλου Τεστοκόρη"
+                },
+                "birthPlace": {
+                  "type": "string",
+                  "example": "Ανω Κοκορούσιανη"
+                },
+                "dob": {
+                  "type": "string",
+                  "example": "2020-01-01"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/childrenGetForApplication": {
+      "get": {
+        "tags": [
+          "DEME_CLIENT_CHILDREN"
+        ],
+        "summary": "Επιστρέφει τα παιδια που καταχωρηθηκαν σε μια αιτηση .",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "applicationAA",
+            "in": "query",
+            "description": "Το Α/Α της αίτησης.",
+            "required": true,
+            "type": "integer",
+            "example": "1"
+          },
+          {
+            "name": "formKey",
+            "in": "query",
+            "description": "Το κλειδι της φορμας.",
+            "required": true,
+            "type": "string",
+            "example": "1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/childrenGetLast": {
+      "get": {
+        "tags": [
+          "DEME_CLIENT_CHILDREN"
+        ],
+        "summary": "Επιστρέφει Τα τελευται περασμενα παιδι για νεα φορμα .",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/childrenMassInsert": {
+      "post": {
+        "tags": [
+          "DEME_CLIENT_CHILDREN"
+        ],
+        "summary": "Μαζικη εισσαγωγή στοιχειων Τέκνου ",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "applicationAA": {
+                  "type": "string",
+                  "example": "1"
+                },
+                "formKey": {
+                  "type": "string",
+                  "example": "RelocationDueToTwoYearRes"
+                },
+                "rows": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "onomo": {
+                        "type": "string",
+                        "example": "Τεστοπουλου Τεστοκόρη"
+                      },
+                      "birthPlace": {
+                        "type": "string",
+                        "example": "Ανω Κοκορούσιανη"
+                      },
+                      "dob": {
+                        "type": "string",
+                        "example": "2020-01-01"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
     }
   }
 }
