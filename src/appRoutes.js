@@ -24,6 +24,7 @@ const FormData = require('form-data')
 const fs2 = require('fs').promises
 const { rimraf, rimrafSync, native, nativeSync } = require('rimraf')
 const atob = (base64) => Buffer.from(base64, 'base64').toString('binary')
+const { sendMailSubmit } = require('./email')
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -1763,6 +1764,7 @@ appRoutes.post('/formSubmit', authenticateToken, async (req, res, next) => {
     }
 
     const formSubmitData = await db.formSubmit({ applicationAA, formKey })
+    console.log('formSubmitData=', formSubmitData)
     if (!formSubmitData?.[0].success) {
       return res.status(200).json(formSubmitData)
     }
@@ -1771,6 +1773,7 @@ appRoutes.post('/formSubmit', authenticateToken, async (req, res, next) => {
       applicationAA,
       formKey,
     })
+
 
     const formPdfData = await db.formPdf({ applicationAA, formKey })
 
@@ -1844,6 +1847,19 @@ appRoutes.post('/formSubmit', authenticateToken, async (req, res, next) => {
       irisId: irisData[0].Id,
       formKey,
     })
+
+    const ob = {
+      toMail: formSubmitData?.[0].email,
+      title: formSubmitData?.[0].formTitle,
+      regNo: formSubmitData?.[0].regNo,
+    }
+
+    try {
+      sendMailSubmit(ob)
+    } catch (err) {
+      console.log('Error sending mail', err)
+    }
+
 
     return res.status(200).json(formSubmitData)
   } catch (err) {
@@ -2222,6 +2238,54 @@ appRoutes.post('/childrenMassInsert', authenticateToken, async (req, res, next) 
     })
 
     return res.status(200).json(childrenMassInsertData)
+  } catch (err) {
+    global.logger.error(err)
+    return res.status(500).json({ success: false, reason: 'Internal Error' })
+  }
+})
+
+//----------------------------------------------------------------------------------
+// Node.js POST Routes FOR SP pr_Application_Cancel
+//----------------------------------------------------------------------------------
+appRoutes.post("/applicationCancel", authenticateToken, async (req, res, next) => {
+  /*
+    #/api/applicationCancel
+    #swagger.tags = ['DEME_CLIENT']
+    #swagger.summary = 'Μαζικη εισσαγωγή στοιχειων Τέκνου '
+    #swagger.security = [{"Bearer": []}]
+    #swagger.parameters['obj'] = {
+      in: 'body',
+      schema: {
+      applicationAA: '1',
+      formKey:'RelocationDueToTwoYearRes'
+      }
+    }
+*/
+  console.log(
+    formatDateTime(new Date()),
+    ': /applicationCancel',
+    'applicationAA =',
+    req.body?.applicationAA,
+    'formKey =',
+    req.body?.formKey
+  )
+  try {
+    const applicationAA = req.body?.applicationAA || null
+    const formKey = req.body?.formKey || null
+    if (!applicationAA) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, applicationAA must have a value.' })
+    }
+    if (!formKey) {
+      return res
+        .status(400)
+        .json({ success: false, reason: 'Bad Request, formKey must have a value.' })
+    }
+
+    const applicationCancelData = await db.applicationCancel({ applicationAA, formKey })
+
+    return res.status(200).json(applicationCancelData)
   } catch (err) {
     global.logger.error(err)
     return res.status(500).json({ success: false, reason: 'Internal Error' })

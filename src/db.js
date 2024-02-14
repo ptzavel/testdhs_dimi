@@ -844,6 +844,25 @@ class DB {
       throw error
     }
   }
+
+  //----------------------------------------------------------------------------------
+  // Node.js DB FOR SP pr_Application_Cancel
+  //----------------------------------------------------------------------------------
+  async applicationCancel({ applicationAA, formKey }) {
+    try {
+      const data = await sql.execute(this.db_conn, {
+        procedure: 'pr_Application_Cancel',
+        params: {
+          applicationAA: { type: sql.INT, val: applicationAA },
+          formKey: { type: sql.NVARCHAR, val: formKey },
+        },
+      })
+      return data[0][0]
+    } catch (error) {
+      global.logger.error(error)
+      throw error
+    }
+  }
 }
 
 
